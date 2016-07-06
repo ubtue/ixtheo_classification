@@ -1,16 +1,12 @@
 package de.tuebingen.uni.ub.hc.MARCProcessing;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.TreeSet;
 
 import org.marc4j.MarcReader;
-import org.marc4j.MarcWriter;
 import org.marc4j.MarcXmlReader;
-import org.marc4j.MarcXmlWriter;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
@@ -18,7 +14,7 @@ import org.marc4j.marc.Subfield;
 
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
-import de.tuebingen.uni.ub.hc.enums.IxTheo_Annotation;
+import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 
 public class MARC4JProcessor {
     private static InputStream in;
@@ -48,21 +44,28 @@ public class MARC4JProcessor {
             Record record = reader.next();
             String data = "";
             Subfield subfield;
+            String ppn = "0";
+            String author = "0";
+            String secAuthor = "0";
+            String lang = "0";
+            String title = "0";
+            String subtitle = "0";
+            String authorGND = "0";
+            String secAuthorGND = "0";
             // get control field with tag 652 IXTHEOAnno
             DataField currentField = (DataField) record.getVariableField("652");
             // if record has IXTheo Anno add to our corpus
             if (currentField != null) {
-                String ppn = record.getControlNumber();
-                ixtRecord = new IxTheoRecord(ppn);
+                ppn = record.getControlNumber();
+                TreeSet<IxTheoAnnotation> ixTheoAnnoSet = new TreeSet<>();
                 // get Annotation(s)
                 data = currentField.getSubfieldsAsString("a");
                 if (!data.contains(":")) {
-                    ixtRecord.getIxTheoAnnoSet().add(IxTheo_Annotation.stringToIxTheo_Annotation(data));
+                    ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheo_Annotation(data));
                 } else {
                     String[] annotations = data.split(":");
                     for (int i = 0; i < annotations.length; i++) {
-                        ixtRecord.getIxTheoAnnoSet()
-                                .add(IxTheo_Annotation.stringToIxTheo_Annotation(annotations[i].trim()));
+                        ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheo_Annotation(annotations[i].trim()));
                     }
                 }
                 // get Language
@@ -72,8 +75,8 @@ public class MARC4JProcessor {
 
                 // the three-character MARC language code takes character
                 // positions 35-37
-                String lang = data.substring(35, 38);
-                ixtRecord.setLanguage(lang);
+               lang = data.substring(35, 38);
+                
                 // create small corpus for debugging purposes
                 // if(lang.contains("ger")){
                 //// System.out.println(lang+" "+countRecForTest);
@@ -88,13 +91,11 @@ public class MARC4JProcessor {
                 if (currentField != null) {
                     subfield = currentField.getSubfield('a');
                     if (subfield != null) {
-                        String author = subfield.getData();
-                        ixtRecord.setAuthor(author);
+                        author = subfield.getData();
                     }
                     subfield = currentField.getSubfield('0');
                     if (subfield != null) {
-                        String authorGND = subfield.getData();
-                        ixtRecord.setAuthorGND(authorGND);
+                        authorGND = subfield.getData();
                     }
                 }
                 // get second author
@@ -104,13 +105,11 @@ public class MARC4JProcessor {
                 if (currentField != null) {
                     subfield = currentField.getSubfield('a');
                     if (subfield != null) {
-                        String secAuthor = subfield.getData();
-                        ixtRecord.setAuthor(secAuthor);
+                       secAuthor = subfield.getData();
                     }
                     subfield = currentField.getSubfield('0');
                     if (subfield != null) {
-                        String secAuthorGND = subfield.getData();
-                        ixtRecord.setSecAuthorGND(secAuthorGND);
+                        secAuthorGND = subfield.getData();
                     }
                 }
 
@@ -119,24 +118,24 @@ public class MARC4JProcessor {
                 // System.out.println(currentField);
                 // get the title proper
                 subfield = currentField.getSubfield('a');
-                String title = subfield.getData();
-                ixtRecord.setTitle(title.replaceAll("\\u0098", ""));
+                title = subfield.getData();
+                title = title.replaceAll("\\u0098", "");
                 subfield = currentField.getSubfield('b');
                 if (subfield != null) {
-                    String subtitle = subfield.getData();
-                    ixtRecord.setSubtitle(subtitle);
+                    subtitle = subfield.getData();
                 }
+                //This field contains a "Herausgeber" if no Author is named
                 subfield = currentField.getSubfield('c');
-                if (subfield != null && ixtRecord.getAuthor().equalsIgnoreCase("0")) {
-                    String author = subfield.getData();
-                    ixtRecord.setAuthor(author);
+                if (subfield != null && author.equalsIgnoreCase("0")) {
+                    author = subfield.getData();
                 }
 
                 // System.out.println(ixtRecord.getAuthor());
-
+                ixtRecord = new IxTheoRecord(ppn, lang, author, authorGND, secAuthor, secAuthorGND, title, subtitle, ixTheoAnnoSet);
                 // when record is filled add to corpus
                 corpus.getRecordList().add(ixtRecord);
             }
+            
         }
 
         // writer.close();

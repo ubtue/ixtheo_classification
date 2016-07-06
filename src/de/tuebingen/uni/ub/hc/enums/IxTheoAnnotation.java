@@ -1,6 +1,6 @@
 package de.tuebingen.uni.ub.hc.enums;
 
-public enum IxTheo_Annotation {
+public enum IxTheoAnnotation {
 
     AA("AA Religionswissenschaft"), AB("AB Religionsphilosophie"), AD("AD Religionssoziologie"), AE(
             "AE Religionspsychologie"), AF("AF Religionsgeographie"), AG("AG Religiöses Leben"), AX(
@@ -120,13 +120,13 @@ public enum IxTheo_Annotation {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             "ZD Psychologie"), ZF(
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     "ZF Pädagogik");
 
-    public static IxTheo_Annotation stringToIxTheo_Annotation(String s) {
-        return IxTheo_Annotation.valueOf(s);
+    public static IxTheoAnnotation stringToIxTheo_Annotation(String s) {
+        return IxTheoAnnotation.valueOf(s);
     }
 
     private String description;
 
-    private IxTheo_Annotation(String description) {
+    private IxTheoAnnotation(String description) {
         this.description = description;
     }
 

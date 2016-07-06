@@ -12,7 +12,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.tuebingen.uni.ub.hc.enums.IxTheo_Annotation;
+import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -29,7 +29,7 @@ public class IxTheoCorpus implements Serializable {
      */
     private static final long serialVersionUID = -5152829236449977331L;
     private Vector<IxTheoRecord> recordList;
-    private HashMap<IxTheo_Annotation, Integer> ixTheoAnnoCount;
+    private HashMap<IxTheoAnnotation, Integer> ixTheoAnnoCount;
     private HashMap<String, Integer> wordCounts, lemmaCounts, neCounts;
     private Vector<String> lemmaStringVector, neStringVector;
 
@@ -38,7 +38,7 @@ public class IxTheoCorpus implements Serializable {
         setWordCounts(new HashMap<String, Integer>());
         setLemmaCounts(new HashMap<String, Integer>());
         setNeCounts(new HashMap<String, Integer>());
-        setIxTheoAnnoCount(new HashMap<IxTheo_Annotation, Integer>());
+        setIxTheoAnnoCount(new HashMap<IxTheoAnnotation, Integer>());
         setLemmaStringVector(new Vector<String>());
         setNeStringVector(new Vector<>());
     }
@@ -103,7 +103,7 @@ public class IxTheoCorpus implements Serializable {
 //        createVectorsInRecords();
     }
 
-    public HashMap<IxTheo_Annotation, Integer> getIxTheoAnnoCount() {
+    public HashMap<IxTheoAnnotation, Integer> getIxTheoAnnoCount() {
         return ixTheoAnnoCount;
     }
 
@@ -154,7 +154,7 @@ public class IxTheoCorpus implements Serializable {
         }
     }
 
-    public void setIxTheoAnnoCount(HashMap<IxTheo_Annotation, Integer> ixTheoAnnoCount) {
+    public void setIxTheoAnnoCount(HashMap<IxTheoAnnotation, Integer> ixTheoAnnoCount) {
         this.ixTheoAnnoCount = ixTheoAnnoCount;
     }
 

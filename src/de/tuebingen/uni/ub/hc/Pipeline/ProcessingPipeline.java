@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
 import de.tuebingen.uni.ub.hc.MARCProcessing.MARC4JProcessor;
-import de.tuebingen.uni.ub.hc.enums.IxTheo_Annotation;
+import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 
 public class ProcessingPipeline {
 
@@ -70,7 +70,7 @@ public class ProcessingPipeline {
         // "+counter);
         Writer theWriter = new Writer();
         theWriter.printIxTheoCategoryFrequenciesTable(corpus, "data/output/IxTheoCategoryFrequencies.csv");
-        theWriter.printARFFImpFeatures(corpus, "data/output/Imp.arff", IxTheo_Annotation.KDB);
+        theWriter.printARFFImpFeatures(corpus, "data/output/Imp.arff", IxTheoAnnotation.KDB);
         return corpus;
     }
 
@@ -103,7 +103,7 @@ public class ProcessingPipeline {
             corpusGer.fillTokenMatrices();
             System.out.println("IN PPipeline" + corpusGer.printStringLemmaVector());
             Writer theWriter = new Writer();
-            theWriter.printArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheo_Annotation.KDB);
+            theWriter.printArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
 
             corpusGer.serialize("data/corpusGerLingAnno.ser");
             corpusGer = null;

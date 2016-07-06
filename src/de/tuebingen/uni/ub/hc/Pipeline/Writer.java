@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
-import de.tuebingen.uni.ub.hc.enums.IxTheo_Annotation;
+import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 
 /**
  * Give the corpus to this class to extract tables for the machine learner or
@@ -20,7 +20,7 @@ import de.tuebingen.uni.ub.hc.enums.IxTheo_Annotation;
 public class Writer {
     FileWriter writer;
 
-    public void printARFFImpFeatures(IxTheoCorpus corpus, String pathname, IxTheo_Annotation IxTheo_Anno)
+    public void printARFFImpFeatures(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
             throws IOException {
         StringBuilder toWrite = new StringBuilder();
         // toWrite.append("PPN, title, author, IXTheo_Annotation\n");
@@ -46,7 +46,7 @@ public class Writer {
         writer.close();
     }
 
-    public void printArfflemmaVector(IxTheoCorpus corpus, String pathname, IxTheo_Annotation IxTheo_Anno)
+    public void printArfflemmaVector(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
             throws IOException {
         StringBuilder toWrite = new StringBuilder();
         toWrite.append("@RELATION ");
@@ -88,7 +88,7 @@ public class Writer {
 
     public void printIxTheoCategoryFrequenciesTable(IxTheoCorpus corpus, String pathname) throws IOException {
         StringBuilder toWrite = new StringBuilder();
-        for (IxTheo_Annotation ita : corpus.getIxTheoAnnoCount().keySet()) {
+        for (IxTheoAnnotation ita : corpus.getIxTheoAnnoCount().keySet()) {
             toWrite.append(ita + ", " + corpus.getIxTheoAnnoCount().get(ita) + "\n");
         }
         writer = new FileWriter(new File(pathname));
