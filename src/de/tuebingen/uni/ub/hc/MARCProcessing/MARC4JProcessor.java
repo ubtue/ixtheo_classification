@@ -141,8 +141,24 @@ public class MARC4JProcessor {
         // writer.close();
     }
 
-    public static void setCorpus(IxTheoCorpus corpus) {
-        MARC4JProcessor.corpus = corpus;
+    private static IxTheoCorpus createEnglishCorpus(IxTheoCorpus c) {
+        IxTheoCorpus cGer = new IxTheoCorpus();
+        for (IxTheoRecord rec : c.getRecordList()) {
+            if (rec.getLanguage().contains("eng")) {
+                cGer.getRecordList().add(rec);
+            }
+        }
+        return cGer;
+    }
+
+    private static IxTheoCorpus createGermanCorpus(IxTheoCorpus c) {
+        IxTheoCorpus cGer = new IxTheoCorpus();
+        for (IxTheoRecord rec : c.getRecordList()) {
+            if (rec.getLanguage().contains("ger")) {
+                cGer.getRecordList().add(rec);
+            }
+        }
+        return cGer;
     }
 
     public MARC4JProcessor(String pathname) throws FileNotFoundException {

@@ -26,48 +26,19 @@ public class ProcessingPipeline {
         return null;
     }
 
-    private static IxTheoCorpus createEnglishCorpus(IxTheoCorpus c) {
-        IxTheoCorpus cGer = new IxTheoCorpus();
-        for (IxTheoRecord rec : c.getRecordList()) {
-            if (rec.getLanguage().contains("eng")) {
-                cGer.getRecordList().add(rec);
-            }
-        }
-        return cGer;
-    }
-
-    private static IxTheoCorpus createGermanCorpus(IxTheoCorpus c) {
-        IxTheoCorpus cGer = new IxTheoCorpus();
-        for (IxTheoRecord rec : c.getRecordList()) {
-            if (rec.getLanguage().contains("ger")) {
-                cGer.getRecordList().add(rec);
-            }
-        }
-        return cGer;
-    }
-
-    public static IxTheoCorpus createNewCorpus() throws IOException {
+    public static IxTheoCorpus createNewCorpus(String filename) throws IOException {
         IxTheoCorpus corpus;
 
         // reader = new
         // MARC4JProcessor("data/GesamtTiteldaten-post-pipeline-160612.xml");
         // reader = new MARC4JProcessor("data/testCorpus.xml");
-        reader = new MARC4JProcessor("data/gerCorpus.xml");
+        reader = new MARC4JProcessor(filename);
 
         corpus = MARC4JProcessor.getCorpus();
         // create corpus only consisting of annotated IxTheo files for
         // training and testing:
         // IxTheoCorpus taggedOnlyCorpus = new IxTheoCorpus();
         System.out.println("num files in entire corpus: " + corpus.getRecordList().size());
-        // for(IxTheoFile f : corpusAllFiles.getFileList()){
-        // if(f.isIxTheoAnnotated() &&
-        // f.getLanguage().equalsIgnoreCase("ger")){
-        // counter += 1;
-        // taggedOnlyCorpus.getFileList().add(f);
-        // }
-        // }
-        // System.out.println("Total number of annotated files:
-        // "+counter);
         Writer theWriter = new Writer();
         theWriter.printIxTheoCategoryFrequenciesTable(corpus, "data/output/IxTheoCategoryFrequencies.csv");
         theWriter.printARFFImpFeatures(corpus, "data/output/Imp.arff", IxTheoAnnotation.KDB);
@@ -94,7 +65,7 @@ public class ProcessingPipeline {
             final long startTime = System.currentTimeMillis();
 
             // Block for new creation
-            IxTheoCorpus corpusGer = createNewCorpus();
+            IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
             // IxTheoCorpus corpusGer = createGermanCorpus(corpus);
             // corpus = null;
             corpusGer.serialize("data/corpusGer.ser");
@@ -111,21 +82,11 @@ public class ProcessingPipeline {
             // IxTheoCorpus corpus = createDesCorpus();
             // Writer theWriter = new Writer();
             // theWriter.printArfflemmaVector(corpus, "data/output/lemma.arff",
-            // IxTheo_Annotation.KDB);
+            // IxTheoAnnotation.KDB);
 
             final long endTime = System.currentTimeMillis();
 
             System.out.println("Total execution time: " + (endTime - startTime) / 1000);
-            // ArrayList<String> paramList = new ArrayList<String>();
-            // for(String s : reader.getPossibleParams()){
-            // paramList.add(s);
-            // }
-            // Collections.sort(paramList);
-            // System.out.println("Printing all used parameters:");
-            // for(String s : paramList){
-            // System.out.println(s);
-            // }
-
         } catch (IOException e) {
             System.err.println("IOException ");
             e.printStackTrace();
