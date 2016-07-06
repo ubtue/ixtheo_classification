@@ -1,0 +1,7 @@
+data
+bin
+dist
+*.log
+*~
+stanford-corenlp-3.6.0-models.jar
+stanford-corenlp-3.6.0-sources.jar
