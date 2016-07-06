@@ -17,208 +17,205 @@ import edu.stanford.nlp.ling.CoreLabel;
  */
 public class IxTheoRecord implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String ppnNumber;
-	private String author;
-	private String authorGND;
-	private String SecAuthor;
-	private String SecAuthorGND;
-	private String publisher;
-	private String language;
-	private String title;
-	private String subtitle;
-	private Vector<CoreLabel> tokenList;
-	private String[] words,lemmas, pos, ne;
-	private Vector<Integer> lemmaVector, neVector;
-	private TreeSet<IxTheo_Annotation> ixTheo_anno_set;
-	private TreeSet<IxTheo_Annotation> namedEntity_set;
+    private static final long serialVersionUID = 1L;
+    private String ppnNumber;
+    private String author;
+    private String authorGND;
+    private String secAuthor;
+    private String secAuthorGND;
+    private String publisher;
+    private String language;
+    private String title;
+    private String subtitle;
+    private Vector<CoreLabel> tokenList;
+    private String[] words, lemmas, pos, ne;
+    private Vector<Integer> lemmaVector, neVector;
+    private TreeSet<IxTheo_Annotation> ixTheoAnnoSet;
+    private TreeSet<IxTheo_Annotation> namedEntitySet;
 
-	public IxTheoRecord(String ppn) {
-		setPpnNumber(ppn);
-		setLanguage("0");
-		setAuthor("0");
-		setAuthorGND("0");
-		setSecAuthor("0");
-		setSecAuthorGND("0");
-		setPublisher("0");
-		setTitle("0");
-		setSubtitle("0");
-		setTokenList(new Vector<>());
-		setLemmaVector(new Vector<>());
-		setNeVector(new Vector<>());
-		setIxTheo_anno_set(new TreeSet<IxTheo_Annotation>());
-	}
+    public IxTheoRecord(String ppn) {
+        setPpnNumber(ppn);
+        setLanguage("0");
+        setAuthor("0");
+        setAuthorGND("0");
+        setSecAuthor("0");
+        setSecAuthorGND("0");
+        setPublisher("0");
+        setTitle("0");
+        setSubtitle("0");
+        setTokenList(new Vector<>());
+        setLemmaVector(new Vector<>());
+        setNeVector(new Vector<>());
+        setIxTheo_anno_set(new TreeSet<IxTheo_Annotation>());
+    }
 
-	public String getAuthor() {
-		return author;
-	}
+    public String getAuthor() {
+        return author;
+    }
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+    public String getAuthorGND() {
+        return authorGND;
+    }
 
-	public String getPpnNumber() {
-		return ppnNumber;
-	}
+    public TreeSet<IxTheo_Annotation> getIxTheoAnnoSet() {
+        return ixTheoAnnoSet;
+    }
 
-	public void setPpnNumber(String ppnNumber) {
-		this.ppnNumber = ppnNumber;
-	}
+    public String getLanguage() {
+        return language;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String[] getLemmas() {
+        return lemmas;
+    }
 
-	public void setTitle(String title) {
-		
-		if (!title.equals("0")) {
-			this.title = title.replaceAll("\\W^\\s","");
-			String[] words = title.split("\\s");
-		}
-	}
+    public Vector<Integer> getLemmaVector() {
+        return lemmaVector;
+    }
 
-	public String getPublisher() {
-		return publisher;
-	}
+    public TreeSet<IxTheo_Annotation> getNamedEntity_set() {
+        return namedEntitySet;
+    }
 
-	public void setPublisher(String publisher) {
-		this.publisher = publisher;
-	}
+    public String[] getNe() {
+        return ne;
+    }
 
-	public TreeSet<IxTheo_Annotation> getIxTheo_anno_set() {
-		return ixTheo_anno_set;
-	}
+    public Vector<Integer> getNeVector() {
+        return neVector;
+    }
 
-	public void setIxTheo_anno_set(TreeSet<IxTheo_Annotation> ixTheo_anno_set) {
-		this.ixTheo_anno_set = ixTheo_anno_set;
-	}
+    public String[] getPos() {
+        return pos;
+    }
 
-	public String getLanguage() {
-		return language;
-	}
+    public String getPpnNumber() {
+        return ppnNumber;
+    }
 
-	public void setLanguage(String language) {
-		this.language = language;
-	}
+    public String getPublisher() {
+        return publisher;
+    }
 
-	public String getAuthorGND() {
-		return authorGND;
-	}
+    public String getSecAuthor() {
+        return secAuthor;
+    }
 
-	public void setAuthorGND(String authorGND) {
-		this.authorGND = authorGND;
-	}
+    public String getSecAuthorGND() {
+        return secAuthorGND;
+    }
 
-	public String getSubtitle() {
-		return subtitle;
-	}
+    public String getSubtitle() {
+        return subtitle;
+    }
 
-	public void setSubtitle(String subtitle) {
-		this.subtitle = subtitle;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getSecAuthor() {
-		return SecAuthor;
-	}
+    public Vector<CoreLabel> getTokenList() {
+        return tokenList;
+    }
 
-	public void setSecAuthor(String secAuthor) {
-		SecAuthor = secAuthor;
-	}
+    public String[] getWords() {
+        return words;
+    }
 
-	public String getSecAuthorGND() {
-		return SecAuthorGND;
-	}
+    public String printLemmaVector() {
+        // System.out.println("should now print lemma vector of File");
+        StringBuilder toWrite = new StringBuilder();
+        Iterator<Integer> myIterator = getLemmaVector().iterator();
+        while (myIterator.hasNext()) {
+            toWrite.append(myIterator.next());
+            toWrite.append(", ");
+        }
+        return toWrite.toString();
+    }
 
-	public void setSecAuthorGND(String secAuthorGND) {
-		SecAuthorGND = secAuthorGND;
-	}
+    public String printNeVector() {
+        StringBuilder toWrite = new StringBuilder();
+        Iterator<Integer> myIterator = getNeVector().iterator();
+        while (myIterator.hasNext()) {
+            toWrite.append(myIterator.next());
+            toWrite.append(", ");
+        }
+        return toWrite.toString();
+    }
 
-	public TreeSet<IxTheo_Annotation> getNamedEntity_set() {
-		return namedEntity_set;
-	}
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-	public void setNamedEntity_set(TreeSet<IxTheo_Annotation> namedEntity_set) {
-		this.namedEntity_set = namedEntity_set;
-	}
+    public void setAuthorGND(String authorGND) {
+        this.authorGND = authorGND;
+    }
 
-	public String[] getLemmas() {
-		return lemmas;
-	}
+    public void setIxTheo_anno_set(TreeSet<IxTheo_Annotation> ixTheoAnnoSet) {
+        this.ixTheoAnnoSet = ixTheoAnnoSet;
+    }
 
-	public void setLemmas(String[] lemmas) {
-		this.lemmas = lemmas;
-	}
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
-	public String[] getPos() {
-		return pos;
-	}
+    public void setLemmas(String[] lemmas) {
+        this.lemmas = lemmas;
+    }
 
-	public void setPos(String[] pos) {
-		this.pos = pos;
-	}
+    public void setLemmaVector(Vector<Integer> lemmaVector) {
+        this.lemmaVector = lemmaVector;
+    }
 
-	public String[] getNe() {
-		return ne;
-	}
+    public void setNamedEntity_set(TreeSet<IxTheo_Annotation> namedEntity_set) {
+        this.namedEntitySet = namedEntity_set;
+    }
 
-	public void setNe(String[] ne) {
-		this.ne = ne;
-	}
+    public void setNe(String[] ne) {
+        this.ne = ne;
+    }
 
-	public String[] getWords() {
-		return words;
-	}
+    public void setNeVector(Vector<Integer> neVector) {
+        this.neVector = neVector;
+    }
 
-	public void setWords(String[] words) {
-		this.words = words;
-	}
+    public void setPos(String[] pos) {
+        this.pos = pos;
+    }
 
-	public Vector<Integer> getLemmaVector() {
-		return lemmaVector;
-	}
+    public void setPpnNumber(String ppnNumber) {
+        this.ppnNumber = ppnNumber;
+    }
 
-	public void setLemmaVector(Vector<Integer> lemmaVector) {
-		this.lemmaVector = lemmaVector;
-	}
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
-	public Vector<Integer> getNeVector() {
-		return neVector;
-	}
+    public void setSecAuthor(String secAuthor) {
+        secAuthor = secAuthor;
+    }
 
-	public void setNeVector(Vector<Integer> neVector) {
-		this.neVector = neVector;
-	}
-	
-	public String printLemmaVector(){
-//		System.out.println("should now print lemma vector of File");
-		StringBuilder toWrite = new StringBuilder();
-		Iterator<Integer> myIterator = getLemmaVector().iterator();
-		while (myIterator.hasNext()) {
-			toWrite.append(myIterator.next());
-			toWrite.append(", ");
-		}
-		return toWrite.toString();
-	}
-	
-	public String printNeVector(){
-		StringBuilder toWrite = new StringBuilder();
-		Iterator<Integer> myIterator = getNeVector().iterator();
-		while (myIterator.hasNext()) {
-			toWrite.append(myIterator.next());
-			toWrite.append(", ");
-		}
-		return toWrite.toString();
-	}
+    public void setSecAuthorGND(String secAuthorGND) {
+        secAuthorGND = secAuthorGND;
+    }
 
-	public Vector<CoreLabel> getTokenList() {
-		return tokenList;
-	}
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
 
-	public void setTokenList(Vector<CoreLabel> tokenList) {
-		this.tokenList = tokenList;
-	}
+    public void setTitle(String title) {
+
+        if (!title.equals("0")) {
+            this.title = title.replaceAll("\\W^\\s", "");
+            String[] words = title.split("\\s");
+        }
+    }
+
+    public void setTokenList(Vector<CoreLabel> tokenList) {
+        this.tokenList = tokenList;
+    }
+
+    public void setWords(String[] words) {
+        this.words = words;
+    }
 
 }
