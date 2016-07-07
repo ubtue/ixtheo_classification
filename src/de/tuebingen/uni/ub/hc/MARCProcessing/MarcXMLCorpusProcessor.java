@@ -3,6 +3,7 @@ package de.tuebingen.uni.ub.hc.MARCProcessing;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.marc4j.MarcReader;
@@ -16,23 +17,16 @@ import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
 import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 
-public class MARC4JProcessor {
+/*
+ * reads XML gives back Corpus or subcorpus
+ */
+public class MarcXMLCorpusProcessor {
     private static InputStream in;
     private static IxTheoCorpus corpus;
 
-    public static IxTheoCorpus getCorpus() {
-        return corpus;
-    }
-
-    public static void main(String args[]) throws Exception {
+    public static IxTheoCorpus processMARCRecords(String pathname) throws FileNotFoundException {
+        in = new FileInputStream(pathname);
         corpus = new IxTheoCorpus();
-        in = new FileInputStream("data/GesamtTiteldaten-post-pipeline-160612.xml");
-        // MarcReader reader = new MarcStreamReader(in);
-        processMARCRecords();
-
-    }
-
-    public static void processMARCRecords() throws FileNotFoundException {
         MarcReader reader = new MarcXmlReader(in);
         // FileOutputStream fw = new FileOutputStream(new
         // File("data/gerCorpus.xml"));
@@ -61,11 +55,11 @@ public class MARC4JProcessor {
                 // get Annotation(s)
                 data = currentField.getSubfieldsAsString("a");
                 if (!data.contains(":")) {
-                    ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheo_Annotation(data));
+                    ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheoAnnotation(data));
                 } else {
                     String[] annotations = data.split(":");
                     for (int i = 0; i < annotations.length; i++) {
-                        ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheo_Annotation(annotations[i].trim()));
+                        ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheoAnnotation(annotations[i].trim()));
                     }
                 }
                 // get Language
@@ -75,14 +69,7 @@ public class MARC4JProcessor {
 
                 // the three-character MARC language code takes character
                 // positions 35-37
-               lang = data.substring(35, 38);
-                
-                // create small corpus for debugging purposes
-                // if(lang.contains("ger")){
-                //// System.out.println(lang+" "+countRecForTest);
-                // writer.write(record);
-                // countRecForTest +=1;
-                // }
+                lang = data.substring(35, 38);
 
                 // get author 101
                 currentField = (DataField) record.getVariableField("100");
@@ -105,7 +92,7 @@ public class MARC4JProcessor {
                 if (currentField != null) {
                     subfield = currentField.getSubfield('a');
                     if (subfield != null) {
-                       secAuthor = subfield.getData();
+                        secAuthor = subfield.getData();
                     }
                     subfield = currentField.getSubfield('0');
                     if (subfield != null) {
@@ -115,55 +102,51 @@ public class MARC4JProcessor {
 
                 // get data field 245 title
                 currentField = (DataField) record.getVariableField("245");
-                // System.out.println(currentField);
                 // get the title proper
                 subfield = currentField.getSubfield('a');
                 title = subfield.getData();
+                
+                //take out seperator, because it's not part of the title itself
                 title = title.replaceAll("\\u0098", "");
+                
                 subfield = currentField.getSubfield('b');
                 if (subfield != null) {
                     subtitle = subfield.getData();
                 }
-                //This field contains a "Herausgeber" if no Author is named
-                subfield = currentField.getSubfield('c');
-                if (subfield != null && author.equalsIgnoreCase("0")) {
-                    author = subfield.getData();
-                }
+//                // This field contains a publisher if no Author is named
+//                subfield = currentField.getSubfield('c');
+//                if (subfield != null && author.equalsIgnoreCase("0")) {
+//                    author = subfield.getData();
+//                }
 
-                // System.out.println(ixtRecord.getAuthor());
-                ixtRecord = new IxTheoRecord(ppn, lang, author, authorGND, secAuthor, secAuthorGND, title, subtitle, ixTheoAnnoSet);
                 // when record is filled add to corpus
-                corpus.getRecordList().add(ixtRecord);
+                corpus.addRecord(new IxTheoRecord(ppn, lang, author, authorGND, secAuthor, secAuthorGND, title, subtitle,
+                        ixTheoAnnoSet));
             }
-            
         }
-
-        // writer.close();
+        return corpus;
     }
 
     private static IxTheoCorpus createEnglishCorpus(IxTheoCorpus c) {
-        IxTheoCorpus cGer = new IxTheoCorpus();
+        IxTheoCorpus englishCorpus = new IxTheoCorpus();
         for (IxTheoRecord rec : c.getRecordList()) {
             if (rec.getLanguage().contains("eng")) {
-                cGer.getRecordList().add(rec);
+                englishCorpus.getRecordList().add(rec);
             }
         }
-        return cGer;
+        return englishCorpus;
     }
 
     private static IxTheoCorpus createGermanCorpus(IxTheoCorpus c) {
-        IxTheoCorpus cGer = new IxTheoCorpus();
-        for (IxTheoRecord rec : c.getRecordList()) {
+        IxTheoCorpus germanCorpus = new IxTheoCorpus();
+        Iterator<IxTheoRecord> recIter = c.getRecordList().iterator();
+        while(recIter.hasNext()){
+            IxTheoRecord rec = recIter.next();
             if (rec.getLanguage().contains("ger")) {
-                cGer.getRecordList().add(rec);
+                germanCorpus.getRecordList().add(rec);
             }
         }
-        return cGer;
+        return germanCorpus;
     }
 
-    public MARC4JProcessor(String pathname) throws FileNotFoundException {
-        in = new FileInputStream(pathname);
-        corpus = new IxTheoCorpus();
-        processMARCRecords();
-    }
 }

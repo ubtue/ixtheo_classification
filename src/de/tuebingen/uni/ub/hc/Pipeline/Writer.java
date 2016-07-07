@@ -72,7 +72,7 @@ public class Writer {
             // System.out.println(f.getTitle());
             // toWrite.append(f.getPpnNumber());
             // toWrite.append(",");
-            toWrite.append(f.printLemmaVector());
+            toWrite.append(f.lemmaVectortoString());
             if (f.getIxTheoAnnoSet().contains(IxTheo_Anno)) {
                 toWrite.append("y");
             } else {

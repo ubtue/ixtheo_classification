@@ -23,10 +23,8 @@ import edu.stanford.nlp.ling.CoreLabel;
  * @author heike cardoso
  *
  */
-public class IxTheoCorpus implements Serializable {
-    /**
-     * 
-     */
+public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
+ { 
     private static final long serialVersionUID = -5152829236449977331L;
     private Vector<IxTheoRecord> recordList;
     private HashMap<IxTheoAnnotation, Integer> ixTheoAnnoCount;
@@ -42,7 +40,8 @@ public class IxTheoCorpus implements Serializable {
         setLemmaStringVector(new Vector<String>());
         setNeStringVector(new Vector<>());
     }
-    /*
+    
+    /**
      * This method creates a Vector of the Alphabet of Lemmas
      */
     private void createLemmaVectorForCorpus() {
@@ -51,7 +50,10 @@ public class IxTheoCorpus implements Serializable {
             this.getLemmaStringVector().add(s);
         }
     }
-
+    
+    /**
+     * construct corpus from serialized file
+     */
     public void deserialize(String filename) {
         IxTheoCorpus e = null;
         try {
@@ -102,10 +104,14 @@ public class IxTheoCorpus implements Serializable {
         createLemmaVectorForCorpus();
 //        createVectorsInRecords();
     }
+    
+    public void addRecord(IxTheoRecord record){
+        this.getRecordList().add(record);
+    }
 
     public HashMap<IxTheoAnnotation, Integer> getIxTheoAnnoCount() {
         return ixTheoAnnoCount;
-    }
+     }
 
     public HashMap<String, Integer> getLemmaCounts() {
         return lemmaCounts;
@@ -177,5 +183,10 @@ public class IxTheoCorpus implements Serializable {
     public void setWordCounts(HashMap<String, Integer> wordCounts) {
         this.wordCounts = wordCounts;
     }
+    @Override
+    public Iterator<IxTheoRecord> iterator() {
+        return this.getRecordList().iterator();
+    }
+   
 
 }

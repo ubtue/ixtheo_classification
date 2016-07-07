@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
-import de.tuebingen.uni.ub.hc.MARCProcessing.MARC4JProcessor;
+import de.tuebingen.uni.ub.hc.MARCProcessing.MarcXMLCorpusProcessor;
 import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 
 public class ProcessingPipeline {
 
-    private static MARC4JProcessor reader;
+    private static MarcXMLCorpusProcessor reader;
 
     public static IxTheoCorpus createDesCorpus() throws IOException {
         try {
@@ -32,9 +32,7 @@ public class ProcessingPipeline {
         // reader = new
         // MARC4JProcessor("data/GesamtTiteldaten-post-pipeline-160612.xml");
         // reader = new MARC4JProcessor("data/testCorpus.xml");
-        reader = new MARC4JProcessor(filename);
-
-        corpus = MARC4JProcessor.getCorpus();
+        corpus = MarcXMLCorpusProcessor.processMARCRecords(filename);
         // create corpus only consisting of annotated IxTheo files for
         // training and testing:
         // IxTheoCorpus taggedOnlyCorpus = new IxTheoCorpus();

@@ -2,22 +2,36 @@ package de.tuebingen.uni.ub.hc.enums;
 
 public enum IxTheoAnnotation {
 
-    AA("AA Religionswissenschaft"), AB("AB Religionsphilosophie"), AD("AD Religionssoziologie"), AE(
-            "AE Religionspsychologie"), AF("AF Religionsgeographie"), AG("AG Religiöses Leben"), AX(
-                    "AX Interreligiöse Beziehung"), AZ("AZ Neue Religion"), BA("BA Nichtchristliche Religion"), BB(
-                            "BB Naturreligion"), BC("BC Alter Orient ; Religion"), BD("BD Alteuropäische Religion"), BE(
-                                    "BE Griechisch-Römische Religion"), BF("BF Gnosis"), BG("BG Weltreligion"), BH(
-                                            "BH Judentum"), BJ("BJ Islam"), BK("BK Hinduismus"), BL(
-                                                    "BL Buddhismus"), BM("BM Chinesischer Universismus"), BN(
-                                                            "BN Schintoismus"), BR("BR Altamerikanische Religion"), CA(
-                                                                    "CA Christentum"), CB(
-                                                                            "CB Christliche Existenz"), CC(
-                                                                                    "CC Christentum ; Nichtchristliche Religion ; Interreligiöse Beziehung"), CD(
-                                                                                            "CD Christentum ; Kultur"), CE(
-                                                                                                    "CE Christliche Kunst"), CF(
-                                                                                                            "CF Christentum ; Wissenschaft"), CG(
-                                                                                                                    "CG Christentum ; Politik"), FA(
-                                                                                                                            "FA Theologie"), FB(
+    AA("AA Religionswissenschaft"),
+    AB("AB Religionsphilosophie"),
+    AD("AD Religionssoziologie"),
+    AE("AE Religionspsychologie"),
+    AF("AF Religionsgeographie"), 
+    AG("AG Religiöses Leben"), 
+    AX("AX Interreligiöse Beziehung"), 
+    AZ("AZ Neue Religion"), 
+    BA("BA Nichtchristliche Religion"), 
+    BB( "BB Naturreligion"), 
+    BC("BC Alter Orient ; Religion"), 
+    BD("BD Alteuropäische Religion"), 
+    BE("BE Griechisch-Römische Religion"), 
+    BF("BF Gnosis"), 
+    BG("BG Weltreligion"), 
+    BH("BH Judentum"), 
+    BJ("BJ Islam"), 
+    BK("BK Hinduismus"), 
+    BL("BL Buddhismus"), 
+    BM("BM Chinesischer Universismus"), 
+    BN("BN Schintoismus"), 
+    BR("BR Altamerikanische Religion"), 
+    CA("CA Christentum"), 
+    CB("CB Christliche Existenz"), 
+    CC("CC Christentum ; Nichtchristliche Religion ; Interreligiöse Beziehung"), 
+    CD( "CD Christentum ; Kultur"), 
+    CE( "CE Christliche Kunst"), 
+    CF( "CF Christentum ; Wissenschaft"), 
+    CG("CG Christentum ; Politik"), 
+    FA("FA Theologie"), FB(
                                                                                                                                     "FB Theologiestudium"), FD(
                                                                                                                                             "FD Kontextuelle Theologie"), HA(
                                                                                                                                                     "HA Bibel"), HB(
@@ -120,7 +134,7 @@ public enum IxTheoAnnotation {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             "ZD Psychologie"), ZF(
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     "ZF Pädagogik");
 
-    public static IxTheoAnnotation stringToIxTheo_Annotation(String s) {
+    public static IxTheoAnnotation stringToIxTheoAnnotation(String s) {
         return IxTheoAnnotation.valueOf(s);
     }
 

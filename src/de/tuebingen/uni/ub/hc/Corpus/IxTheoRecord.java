@@ -96,7 +96,7 @@ public class IxTheoRecord implements Serializable {
         return words;
     }
 
-    public String printLemmaVector() {
+    public String lemmaVectortoString() {
         StringBuilder toWrite = new StringBuilder();
         Iterator<Integer> myIterator = getLemmaVector().iterator();
         while (myIterator.hasNext()) {
@@ -106,7 +106,7 @@ public class IxTheoRecord implements Serializable {
         return toWrite.toString();
     }
 
-    public String printNeVector() {
+    public String neVectortoString() {
         StringBuilder toWrite = new StringBuilder();
         Iterator<Integer> myIterator = getNeVector().iterator();
         while (myIterator.hasNext()) {
