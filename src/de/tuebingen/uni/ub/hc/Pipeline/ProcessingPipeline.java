@@ -36,7 +36,7 @@ public class ProcessingPipeline {
         // create corpus only consisting of annotated IxTheo files for
         // training and testing:
         // IxTheoCorpus taggedOnlyCorpus = new IxTheoCorpus();
-        System.out.println("num files in entire corpus: " + corpus.getRecordList().size());
+        System.out.println("num files in entire corpus: " + corpus.getNumRecordsInCorpus());
         Writer theWriter = new Writer();
         theWriter.printIxTheoCategoryFrequenciesTable(corpus, "data/output/IxTheoCategoryFrequencies.csv");
         theWriter.printARFFImpFeatures(corpus, "data/output/Imp.arff", IxTheoAnnotation.KDB);

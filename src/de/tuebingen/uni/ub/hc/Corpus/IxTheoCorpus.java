@@ -79,7 +79,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
     public void fillTokenMatrices() {
         Pattern pattern = Pattern
                 .compile("(CC)|(DT)|(EX)|(IN)|(LS)|(MD)|(P.*)|(RP)|(SYM)|(TO)|(UH)|(\\p{Punct})|(\\W)");
-        for (IxTheoRecord rec : this.getRecordList()) {
+        for (IxTheoRecord rec : this.recordList) {
             for (int i = 0; i < rec.getTokenList().size(); i++) {
                 CoreLabel token = rec.getTokenList().get(i);
                 // check in posTagList is corresponding POS is significant
@@ -106,7 +106,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
     }
     
     public void addRecord(IxTheoRecord record){
-        this.getRecordList().add(record);
+        this.recordList.add(record);
     }
 
     public HashMap<IxTheoAnnotation, Integer> getIxTheoAnnoCount() {
@@ -129,9 +129,6 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
         return neStringVector;
     }
 
-    public Vector<IxTheoRecord> getRecordList() {
-        return recordList;
-    }
 
     public HashMap<String, Integer> getWordCounts() {
         return wordCounts;
@@ -185,7 +182,11 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
     }
     @Override
     public Iterator<IxTheoRecord> iterator() {
-        return this.getRecordList().iterator();
+        return this.recordList.iterator();
+    }
+    
+    public int getNumRecordsInCorpus(){
+        return this.recordList.size();
     }
    
 

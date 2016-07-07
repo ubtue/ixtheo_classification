@@ -127,23 +127,21 @@ public class MarcXMLCorpusProcessor {
         return corpus;
     }
 
-    private static IxTheoCorpus createEnglishCorpus(IxTheoCorpus c) {
+    private static IxTheoCorpus createEnglishCorpus(IxTheoCorpus corpus) {
         IxTheoCorpus englishCorpus = new IxTheoCorpus();
-        for (IxTheoRecord rec : c.getRecordList()) {
+        for (IxTheoRecord rec : corpus) {
             if (rec.getLanguage().contains("eng")) {
-                englishCorpus.getRecordList().add(rec);
+                englishCorpus.addRecord(rec);
             }
         }
         return englishCorpus;
     }
 
-    private static IxTheoCorpus createGermanCorpus(IxTheoCorpus c) {
+    private static IxTheoCorpus createGermanCorpus(IxTheoCorpus corpus) {
         IxTheoCorpus germanCorpus = new IxTheoCorpus();
-        Iterator<IxTheoRecord> recIter = c.getRecordList().iterator();
-        while(recIter.hasNext()){
-            IxTheoRecord rec = recIter.next();
+        for (IxTheoRecord rec : corpus) {
             if (rec.getLanguage().contains("ger")) {
-                germanCorpus.getRecordList().add(rec);
+                germanCorpus.addRecord(rec);
             }
         }
         return germanCorpus;

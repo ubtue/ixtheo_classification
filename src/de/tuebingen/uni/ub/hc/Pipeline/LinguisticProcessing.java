@@ -28,7 +28,7 @@ public class LinguisticProcessing {
         Properties germanProperties = StringUtils.argsToProperties(
                 new String[] { "tokenize, ssplit, pos, lemma, ner", "StanfordCoreNLP-german.properties" });
         StanfordCoreNLP pipeline = new StanfordCoreNLP(germanProperties);
-        for (IxTheoRecord record : corpus.getRecordList()) {
+        for (IxTheoRecord record : corpus) {
             runStanfordCoreNLPPipeline(record, pipeline);
         }
     }

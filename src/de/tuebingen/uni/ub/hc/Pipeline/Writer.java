@@ -26,7 +26,7 @@ public class Writer {
         // toWrite.append("PPN, title, author, IXTheo_Annotation\n");
         toWrite.append(
                 "@RELATION IX_Theo_Anno\n   @ATTRIBUTE ppn  STRING \n@ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  String  \n@ATTRIBUTE secondAuthorGND  String\n@ATTRIBUTE class   {1,0}\n @DATA\n");
-        for (IxTheoRecord f : corpus.getRecordList()) {
+        for (IxTheoRecord f : corpus) {
             // System.out.println(f.getTitle());
             toWrite.append(f.getPpnNumber() + ",'");
             toWrite.append(f.getTitle().replaceAll("\\p{Punct}", ""));
@@ -68,7 +68,7 @@ public class Writer {
         toWrite.append("\n");
         toWrite.append("@DATA");
         toWrite.append("\n");
-        for (IxTheoRecord f : corpus.getRecordList()) {
+        for (IxTheoRecord f : corpus) {
             // System.out.println(f.getTitle());
             // toWrite.append(f.getPpnNumber());
             // toWrite.append(",");
