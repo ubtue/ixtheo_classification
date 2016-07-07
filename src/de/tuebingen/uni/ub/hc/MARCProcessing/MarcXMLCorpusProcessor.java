@@ -1,13 +1,16 @@
 package de.tuebingen.uni.ub.hc.MARCProcessing;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.marc4j.MarcReader;
+import org.marc4j.MarcWriter;
 import org.marc4j.MarcXmlReader;
+import org.marc4j.MarcXmlWriter;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
@@ -23,16 +26,38 @@ import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 public class MarcXMLCorpusProcessor {
     private static InputStream in;
     private static IxTheoCorpus corpus;
+    
+    public static void writeSubcorpusXML(String inputFilename, String outputFilename, int sizeOfTestCorpus) throws FileNotFoundException{
+        in = new FileInputStream(inputFilename);
+      FileOutputStream fw = new FileOutputStream(new
+         File(outputFilename));
+         MarcWriter writer = new MarcXmlWriter(fw, "UTF8");
+         MarcReader reader = new MarcXmlReader(in);
+         int count = 0;
+         while (reader.hasNext()) {
+             Record record = reader.next();
+             DataField currentField = (DataField) record.getVariableField("652");
+             
+             ControlField curControlField = (ControlField) record.getVariableField("008");
+
+             // the three-character MARC language code takes character
+             // positions 35-37
+             String lang = curControlField.getData().substring(35, 38);
+             
+             // if record has IXTheo Anno add to our corpus
+             if (currentField != null && lang.contains("ger") && count < sizeOfTestCorpus) {
+                 writer.write(record);
+                 count +=1;
+             }
+         }
+         System.out.println(count);
+    }
 
     public static IxTheoCorpus processMARCRecords(String pathname) throws FileNotFoundException {
         in = new FileInputStream(pathname);
         corpus = new IxTheoCorpus();
         MarcReader reader = new MarcXmlReader(in);
-        // FileOutputStream fw = new FileOutputStream(new
-        // File("data/gerCorpus.xml"));
-        // MarcWriter writer = new MarcXmlWriter(fw, "UTF8");
         int countRecForTest = 0;
-        IxTheoRecord ixtRecord;
         // iterate through all records in MARC corpus at pathname
         while (reader.hasNext()) {
             Record record = reader.next();

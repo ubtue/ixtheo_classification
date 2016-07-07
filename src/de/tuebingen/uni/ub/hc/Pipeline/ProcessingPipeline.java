@@ -28,14 +28,7 @@ public class ProcessingPipeline {
 
     public static IxTheoCorpus createNewCorpus(String filename) throws IOException {
         IxTheoCorpus corpus;
-
-        // reader = new
-        // MARC4JProcessor("data/GesamtTiteldaten-post-pipeline-160612.xml");
-        // reader = new MARC4JProcessor("data/testCorpus.xml");
         corpus = MarcXMLCorpusProcessor.processMARCRecords(filename);
-        // create corpus only consisting of annotated IxTheo files for
-        // training and testing:
-        // IxTheoCorpus taggedOnlyCorpus = new IxTheoCorpus();
         System.out.println("num files in entire corpus: " + corpus.getNumRecordsInCorpus());
         Writer theWriter = new Writer();
         theWriter.printIxTheoCategoryFrequenciesTable(corpus, "data/output/IxTheoCategoryFrequencies.csv");
@@ -61,21 +54,20 @@ public class ProcessingPipeline {
         try {
             System.out.println("Reading corpus");
             final long startTime = System.currentTimeMillis();
+            
+            MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml", "data/test2000CorpusGer.xml", 2000);
 
             // Block for new creation
-            IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
-            // IxTheoCorpus corpusGer = createGermanCorpus(corpus);
-            // corpus = null;
-            corpusGer.serialize("data/corpusGer.ser");
+            IxTheoCorpus corpusGer = createNewCorpus("data/test2000gerCorpus.xml");
+            corpusGer.serialize("data/corpusGerTest.ser");
             LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
-            corpusGer.serialize("data/corpusGerLingAnno.ser");
+            corpusGer.serialize("data/corpusGerLingAnnoTest.ser");
             corpusGer.fillTokenMatrices();
-            System.out.println("IN PPipeline" + corpusGer.printStringLemmaVector());
             Writer theWriter = new Writer();
-            theWriter.printArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
+            theWriter.printArfflemmaVector(corpusGer, "data/output/lemmaTest.arff", IxTheoAnnotation.KDB);
 
-            corpusGer.serialize("data/corpusGerLingAnno.ser");
-            corpusGer = null;
+//            corpusGer.serialize("data/corpusGer.ser");
+//            corpusGer = null;
 
             // IxTheoCorpus corpus = createDesCorpus();
             // Writer theWriter = new Writer();
