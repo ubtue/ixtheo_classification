@@ -30,6 +30,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
     private HashMap<IxTheoAnnotation, Integer> ixTheoAnnoCount;
     private HashMap<String, Integer> wordCounts, lemmaCounts, neCounts;
     private Vector<String> lemmaStringVector, neStringVector;
+    private HashMap<String, Integer> indexMap;
 
     public IxTheoCorpus() {
         recordList = new Vector<IxTheoRecord>();
@@ -39,6 +40,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
         setIxTheoAnnoCount(new HashMap<IxTheoAnnotation, Integer>());
         setLemmaStringVector(new Vector<String>());
         setNeStringVector(new Vector<>());
+        indexMap = new HashMap<>();
     }
     
     /**

@@ -3,16 +3,14 @@ package de.tuebingen.uni.ub.hc.Pipeline;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.Vector;
 
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
 import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
-
 import weka.core.Attribute;
 import weka.core.FastVector;
-import weka.core.Instance;
 import weka.core.Instances;
 
 /**
@@ -101,8 +99,33 @@ public class Writer {
         writer.close();
     }
     
-    public void writeNeArff(String pathname) throws IOException{
+    public void writeNeArff(IxTheoCorpus corpus, String pathname) throws IOException{
+        FastVector      atts;
+        FastVector      attsRel;
+        FastVector      attVals;
+        FastVector      attValsRel;
+        Instances       data;
+        Instances       dataRel;
+        double[]        vals;
+        double[]        valsRel;
+        int             i;
         writer = new FileWriter(new File(pathname));
+        Vector<String> alphabetVector = corpus.getNeStringVector();
+        //Fill attribute vector for file header
+        atts = new FastVector();
+        for(String epsilon : alphabetVector){
+            atts.addElement(new Attribute(epsilon));
+        }
+     // 2. create Instances object
+        data = new Instances("IxTheoRelation", atts, 0);
+        for(IxTheoRecord record: corpus){
+            
+            // - numeric
+            for(String ne : alphabetVector){
+//                if(record.)
+            
+            }
+        }
         writer.write("");
         writer.flush();
         writer.close();
