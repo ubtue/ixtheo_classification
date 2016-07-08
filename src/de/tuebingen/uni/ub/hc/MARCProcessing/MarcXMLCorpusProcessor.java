@@ -51,6 +51,7 @@ public class MarcXMLCorpusProcessor {
              }
          }
          System.out.println(count);
+         writer.close();
     }
 
     public static IxTheoCorpus processMARCRecords(String pathname) throws FileNotFoundException {

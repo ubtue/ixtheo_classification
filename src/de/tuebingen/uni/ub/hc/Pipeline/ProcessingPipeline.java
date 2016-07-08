@@ -55,16 +55,17 @@ public class ProcessingPipeline {
             System.out.println("Reading corpus");
             final long startTime = System.currentTimeMillis();
             
-            MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml", "data/test2000CorpusGer.xml", 2000);
+//            MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml", "data/test2000CorpusGer.xml", 2000);
 
             // Block for new creation
-            IxTheoCorpus corpusGer = createNewCorpus("data/test2000gerCorpus.xml");
+            IxTheoCorpus corpusGer = createNewCorpus("data/test2000CorpusGer.xml");
             corpusGer.serialize("data/corpusGerTest.ser");
             LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
             corpusGer.serialize("data/corpusGerLingAnnoTest.ser");
             corpusGer.fillTokenMatrices();
             Writer theWriter = new Writer();
             theWriter.printArfflemmaVector(corpusGer, "data/output/lemmaTest.arff", IxTheoAnnotation.KDB);
+//            theWriter.
 
 //            corpusGer.serialize("data/corpusGer.ser");
 //            corpusGer = null;
@@ -73,7 +74,7 @@ public class ProcessingPipeline {
             // Writer theWriter = new Writer();
             // theWriter.printArfflemmaVector(corpus, "data/output/lemma.arff",
             // IxTheoAnnotation.KDB);
-
+ 
             final long endTime = System.currentTimeMillis();
 
             System.out.println("Total execution time: " + (endTime - startTime) / 1000);

@@ -25,10 +25,9 @@ public class Writer {
         StringBuilder toWrite = new StringBuilder();
         // toWrite.append("PPN, title, author, IXTheo_Annotation\n");
         toWrite.append(
-                "@RELATION IX_Theo_Anno\n   @ATTRIBUTE ppn  STRING \n@ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  String  \n@ATTRIBUTE secondAuthorGND  String\n@ATTRIBUTE class   {1,0}\n @DATA\n");
+                "@RELATION IX_Theo_Anno\n   STRING \n@ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  String  \n@ATTRIBUTE secondAuthorGND  String\n@ATTRIBUTE class   {1,0}\n @DATA\n");
         for (IxTheoRecord f : corpus) {
             // System.out.println(f.getTitle());
-            toWrite.append(f.getPpnNumber() + ",'");
             toWrite.append(f.getTitle().replaceAll("\\p{Punct}", ""));
             toWrite.append("','" + f.getSubtitle().replaceAll("\\p{Punct}", ""));
             toWrite.append("'," + f.getAuthorGND().replaceAll("\\D", "") + ",");
@@ -96,5 +95,7 @@ public class Writer {
         writer.flush();
         writer.close();
     }
+    
+//    public void writeN
 
 }

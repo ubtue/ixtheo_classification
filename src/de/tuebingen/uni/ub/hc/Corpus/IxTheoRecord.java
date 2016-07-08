@@ -35,6 +35,14 @@ public class IxTheoRecord implements Serializable {
     public IxTheoRecord(String ppn, String lang, String author, String authorGND, String secAuthor, String secAuthorGND,
             String title, String subtitle, TreeSet<IxTheoAnnotation> ixTheoAnnoSet) {
         this.ppnNumber = ppn;
+        this.language = lang;
+        this.author = author;
+        this.authorGND = authorGND;
+        this.secAuthor = secAuthor;
+        this.secAuthorGND = secAuthorGND;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.ixTheoAnnoSet = ixTheoAnnoSet;
         setTokenList(new Vector<>());
         setLemmaVector(new Vector<>());
         setNeVector(new Vector<>());
