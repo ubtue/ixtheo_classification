@@ -10,6 +10,11 @@ import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
 import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 
+import weka.core.Attribute;
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
+
 /**
  * Give the corpus to this class to extract tables for the machine learner or
  * for statistics
@@ -25,7 +30,7 @@ public class Writer {
         StringBuilder toWrite = new StringBuilder();
         // toWrite.append("PPN, title, author, IXTheo_Annotation\n");
         toWrite.append(
-                "@RELATION IX_Theo_Anno\n   STRING \n@ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  String  \n@ATTRIBUTE secondAuthorGND  String\n@ATTRIBUTE class   {1,0}\n @DATA\n");
+                "@RELATION IX_Theo_Anno\n  @ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  String  \n@ATTRIBUTE secondAuthorGND  String\n@ATTRIBUTE class   {1,0}\n @DATA\n");
         for (IxTheoRecord f : corpus) {
             // System.out.println(f.getTitle());
             toWrite.append(f.getTitle().replaceAll("\\p{Punct}", ""));
@@ -96,6 +101,19 @@ public class Writer {
         writer.close();
     }
     
-//    public void writeN
+    public void writeNeArff(String pathname) throws IOException{
+        writer = new FileWriter(new File(pathname));
+        writer.write("");
+        writer.flush();
+        writer.close();
+    }
+    
+    public void writeLemmaArff(String pathname)throws IOException{
+        writer = new FileWriter(new File(pathname));
+        writer.write("");
+        writer.flush();
+        writer.close();
+    }
+    
 
 }
