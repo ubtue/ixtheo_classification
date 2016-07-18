@@ -11,6 +11,7 @@ import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
 import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 import weka.core.Attribute;
 import weka.core.FastVector;
+import weka.core.Instance;
 import weka.core.Instances;
 
 /**
@@ -48,7 +49,7 @@ public class Writer {
         writer.close();
     }
 
-    public void printArfflemmaVector(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
+    public void writeArfflemmaVector(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
             throws IOException {
         StringBuilder toWrite = new StringBuilder();
         toWrite.append("@RELATION ");
@@ -71,6 +72,7 @@ public class Writer {
         toWrite.append("@DATA");
         toWrite.append("\n");
         for (IxTheoRecord f : corpus) {
+
             // System.out.println(f.getTitle());
             // toWrite.append(f.getPpnNumber());
             // toWrite.append(",");
@@ -98,45 +100,50 @@ public class Writer {
         writer.flush();
         writer.close();
     }
-    
-    public void writeNeArff(IxTheoCorpus corpus, String pathname) throws IOException{
-        FastVector      atts;
-        FastVector      attsRel;
-        FastVector      attVals;
-        FastVector      attValsRel;
-        Instances       data;
-        Instances       dataRel;
-        double[]        vals;
-        double[]        valsRel;
-        int             i;
+
+    public void writeNeArffWithWeka(IxTheoCorpus corpus, String pathname) throws IOException {
+        FastVector atts;
+        FastVector attVals;
+        Instances data;
+        double[] vals;
+        double[] valsRel;
+        int i;
         writer = new FileWriter(new File(pathname));
         Vector<String> alphabetVector = corpus.getNeStringVector();
-        //Fill attribute vector for file header
+
+        // Fill attribute vector for file header
         atts = new FastVector();
-        for(String epsilon : alphabetVector){
+        for (String epsilon : alphabetVector) {
             atts.addElement(new Attribute(epsilon));
         }
-     // 2. create Instances object
+        // 2. create Instances object
         data = new Instances("IxTheoRelation", atts, 0);
-        for(IxTheoRecord record: corpus){
-            
+
+        for (IxTheoRecord record : corpus) {
+            vals = new double[data.numAttributes()]; // important: needs NEW
+                                                     // array!
             // - numeric
-            for(String ne : alphabetVector){
-//                if(record.)
-            
+            int vectorIndex = 0;
+            for (String ne : alphabetVector) {
+                if (record.getNamedEntitySet().contains(ne)) {
+                    vals[vectorIndex] = 1;
+                } else {
+                    vals[vectorIndex] = 1;
+                }
+                vectorIndex += 1;
             }
+            data.add(new Instance(1.0, vals));
         }
-        writer.write("");
+        writer.write(data.toString());
         writer.flush();
         writer.close();
     }
-    
-    public void writeLemmaArff(String pathname)throws IOException{
+
+    public void writeLemmaArff(String pathname) throws IOException {
         writer = new FileWriter(new File(pathname));
         writer.write("");
         writer.flush();
         writer.close();
     }
-    
 
 }

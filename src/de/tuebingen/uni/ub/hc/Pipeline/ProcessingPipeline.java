@@ -64,7 +64,7 @@ public class ProcessingPipeline {
             corpusGer.serialize("data/corpusGerLingAnnoTest.ser");
             corpusGer.fillTokenMatrices();
             Writer theWriter = new Writer();
-            theWriter.printArfflemmaVector(corpusGer, "data/output/lemmaTest.arff", IxTheoAnnotation.KDB);
+            theWriter.writeArfflemmaVector(corpusGer, "data/output/lemmaTest.arff", IxTheoAnnotation.KDB);
 //            theWriter.
 
 //            corpusGer.serialize("data/corpusGer.ser");
