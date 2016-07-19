@@ -56,17 +56,16 @@ public class ProcessingPipeline {
             // "data/test2000CorpusGer.xml", 2000);
 
             // Block for new creation
-            MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
-                     "data/output/TestCorpus.xml", 10);
-             IxTheoCorpus corpusGer = createNewCorpus("data/output/TestCorpus.xml");
-             corpusGer.serialize("data/corpusGerTest.ser");
+//            MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
+//                     "data/output/TestCorpus.xml", 10);
+             IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
+             corpusGer.serialize("data/corpusGer.ser");
              LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
-             corpusGer.serialize("data/corpusGerLingAnnoTest.ser");
+             corpusGer.serialize("data/corpusGerLingAnno.ser");
              corpusGer.fillTokenMatrices();
-             Writer theWriter = new Writer();
-             theWriter.writeArfflemmaVector(corpusGer,
-             "data/output/lemma.arff", IxTheoAnnotation.KDB);
-             theWriter.writeNeArffWithWeka(corpusGer,
+             Writer.writeLemmaArffWithWeka(corpusGer,
+             "data/output/lemmaWeka.arff", IxTheoAnnotation.KDB);
+             Writer.writeNeArffWithWeka(corpusGer,
              "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
 
             // corpusGer.serialize("data/corpusGer.ser");

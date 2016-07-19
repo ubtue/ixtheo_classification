@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
+import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
@@ -58,6 +59,10 @@ public class LinguisticProcessing {
                 // this is the text of the token
                 String word = token.get(TextAnnotation.class);
                 record.getTokenList().add(token);
+                if(!token.get(NamedEntityTagAnnotation.class).equals("O")){
+                    record.addToNeSet(token.lemma());
+                }
+                record.getLemmaSet().add(token.lemma());
 //                record.getLemmaSet().add(token.lemma());
 //                record.getNeSet().add(token.get(NamedEntityTagAnnotation.class));
             }

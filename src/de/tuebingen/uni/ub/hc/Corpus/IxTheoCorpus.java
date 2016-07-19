@@ -50,7 +50,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
         this.setLemmaStringVector(new Vector<>(this.getLemmaCounts().keySet().size()));
         for (String s : this.getLemmaCounts().keySet()) {
             this.getLemmaStringVector().add(s);
-            System.out.println("adding lemma: "+s);
+//            System.out.println("adding lemma: "+s);
         }
     }
     
@@ -61,7 +61,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
         this.setNeStringVector(new Vector<>(this.getNeCounts().keySet().size()));
         for (String s : this.getNeCounts().keySet()) {
             this.getNeStringVector().add(s);
-            System.out.println("adding s: "+s);
+//            System.out.println("adding s: "+s);
         }
     }
     
@@ -110,8 +110,9 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
                 
                 String ne = "";
                 if(!token.get(NamedEntityTagAnnotation.class).equals("O")){
+                    System.out.println("In Corpus adding ne: "+token.lemma());
                     ne = token.lemma();
-                    rec.getNeSet().add(ne);
+                    rec.addToNeSet(ne);
                     if (this.getNeCounts().keySet().contains(ne)) {
                         this.getNeCounts().put(ne, this.getNeCounts().get(ne) + 1);
                     } else {

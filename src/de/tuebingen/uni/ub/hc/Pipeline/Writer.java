@@ -141,10 +141,68 @@ public class Writer {
             // - numeric
             int vectorIndex = 0;
             for (String ne : alphabetVector) {
-                if(record.getNamedEntitySet() == null){
+                System.out.println("NE in alphabet vector: "+ne);
+                if(record.getNeSet() == null){
+                    vals[vectorIndex] = 0;
+                    System.out.println("EMPTYSET");
+                }
+                else if (record.getNeSet().contains(ne)) {
+                    vals[vectorIndex] = 1;
+                    System.err.println("SET CONTAINS NE");
+                } else {
                     vals[vectorIndex] = 0;
                 }
-                else if (record.getNamedEntitySet().contains(ne)) {
+                vectorIndex += 1;
+            }
+            String result = "not_" + anno.toShortString();
+            if (record.getIxTheoAnnoSet().contains(anno)) {
+                result = anno.toShortString();
+            }
+            vals[data.numAttributes() - 1] = attVals.indexOf(result);
+            data.add(new Instance(1.0, vals));
+        }
+        writer.write(data.toString());
+//        System.out.println(data.toString());
+        writer.flush();
+        writer.close();
+    }
+    
+    public static void writeLemmaArffWithWeka(IxTheoCorpus corpus, String pathname, IxTheoAnnotation anno) throws IOException {
+        FastVector atts;
+        FastVector attVals;
+        Instances data;
+        double[] vals;
+        double[] valsRel;
+        int i;
+        FileWriter writer  = new FileWriter(new File(pathname));
+        Vector<String> alphabetVector = corpus.getLemmaStringVector();
+
+        // Fill attribute vector for file header
+        // add all nes as attributes
+        atts = new FastVector();
+        for (String epsilon : alphabetVector) {
+            atts.addElement(new Attribute(epsilon));
+        }
+        // add IxTheoAnnotation
+        attVals = new FastVector();
+        attVals.addElement(anno.toShortString());
+        attVals.addElement("not_" + anno.toShortString());
+        atts.addElement(new Attribute("IxTheoAnnotation", attVals));
+
+        // 2. create Instances object
+        data = new Instances("IxTheoRelation", atts, 0);
+
+        for (IxTheoRecord record : corpus) {
+            vals = new double[data.numAttributes()]; // important: needs NEW
+                                                     // array!
+            // - numeric
+            int vectorIndex = 0;
+            for (String ne : alphabetVector) {
+                System.out.println("NE in alphabet vector: "+ne);
+                if(record.getLemmaSet() == null){
+                    vals[vectorIndex] = 0;
+                }
+                else if (record.getLemmaSet().contains(ne)) {
                     vals[vectorIndex] = 1;
                 } else {
                     vals[vectorIndex] = 0;

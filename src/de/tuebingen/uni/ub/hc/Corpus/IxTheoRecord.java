@@ -32,7 +32,6 @@ public class IxTheoRecord implements Serializable {
     private HashSet<String> neSet, lemmaSet;
     private Vector<Integer> lemmaVector, neVector;
     private TreeSet<IxTheoAnnotation> ixTheoAnnoSet;
-    private TreeSet<IxTheoAnnotation> namedEntitySet;
 
     public IxTheoRecord(String ppn, String lang, String author, String authorGND, String secAuthor, String secAuthorGND,
             String title, String subtitle, TreeSet<IxTheoAnnotation> ixTheoAnnoSet) {
@@ -70,10 +69,6 @@ public class IxTheoRecord implements Serializable {
 
     public Vector<Integer> getLemmaVector() {
         return lemmaVector;
-    }
-
-    public TreeSet<IxTheoAnnotation> getNamedEntitySet() {
-        return namedEntitySet;
     }
 
     public Vector<Integer> getNeVector() {
@@ -132,10 +127,6 @@ public class IxTheoRecord implements Serializable {
         this.lemmaVector = lemmaVector;
     }
 
-    public void setNamedEntitySet(TreeSet<IxTheoAnnotation> namedEntitySet) {
-        this.namedEntitySet = namedEntitySet;
-    }
-
     public void setNeVector(Vector<Integer> neVector) {
         this.neVector = neVector;
     }
@@ -151,6 +142,9 @@ public class IxTheoRecord implements Serializable {
 
     public HashSet<String> getNeSet() {
         return neSet;
+    }
+    public void addToNeSet(String ne){
+        this.getNeSet().add(ne);
     }
 
     public HashSet<String> getLemmaSet() {
