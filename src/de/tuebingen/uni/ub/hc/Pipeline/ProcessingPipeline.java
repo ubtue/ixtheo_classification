@@ -11,10 +11,9 @@ public class ProcessingPipeline {
 
     private static MarcXMLCorpusProcessor reader;
 
-    public static IxTheoCorpus createDesCorpus() throws IOException {
+    public static IxTheoCorpus createDesCorpus(String filename) throws IOException {
         try {
-            IxTheoCorpus corpus = deserializeCorpus("data/corpusGerLingAnno.ser");
-
+            IxTheoCorpus corpus = deserializeCorpus(filename);
             return corpus;
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
@@ -27,9 +26,8 @@ public class ProcessingPipeline {
         IxTheoCorpus corpus;
         corpus = MarcXMLCorpusProcessor.processMARCRecords(filename);
         System.out.println("num files in entire corpus: " + corpus.getNumRecordsInCorpus());
-        Writer theWriter = new Writer();
-        theWriter.printIxTheoCategoryFrequenciesTable(corpus, "data/output/IxTheoCategoryFrequencies.csv");
-        theWriter.printARFFImpFeatures(corpus, "data/output/Imp.arff", IxTheoAnnotation.KDB);
+        Writer.printIxTheoCategoryFrequenciesTable(corpus, "data/output/IxTheoCategoryFrequencies.csv");
+        Writer.printARFFImpFeatures(corpus, "data/output/Imp.arff", IxTheoAnnotation.KDB);
         return corpus;
     }
 
@@ -49,33 +47,38 @@ public class ProcessingPipeline {
     public static void main(String[] args) {
 
         try {
-           
+
             System.out.println("Reading corpus");
             final long startTime = System.currentTimeMillis();
-//            MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml", "data/output/TestCorpus.xml", 1000);
-//            MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml", "data/test2000CorpusGer.xml", 2000);
+            // MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
+            // "data/output/TestCorpus.xml", 1000);
+            // MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml",
+            // "data/test2000CorpusGer.xml", 2000);
 
             // Block for new creation
-            IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
-            corpusGer.serialize("data/corpusGer.ser");
-            LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
-            corpusGer.serialize("data/corpusGerLingAnno.ser");
-            corpusGer.fillTokenMatrices();
-            Writer theWriter = new Writer();
-            theWriter.writeArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
-            theWriter.writeNeArffWithWeka(corpusGer, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
-
-//            corpusGer.serialize("data/corpusGer.ser");
-//            corpusGer = null;
-
-            // IxTheoCorpus corpus = createDesCorpus();
+            // IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
+            // corpusGer.serialize("data/corpusGer.ser");
+            // LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
+            // corpusGer.serialize("data/corpusGerLingAnno.ser");
+            // corpusGer.fillTokenMatrices();
             // Writer theWriter = new Writer();
-            // theWriter.printArfflemmaVector(corpus, "data/output/lemma.arff",
-            // IxTheoAnnotation.KDB);
- 
+            // theWriter.writeArfflemmaVector(corpusGer,
+            // "data/output/lemma.arff", IxTheoAnnotation.KDB);
+            // theWriter.writeNeArffWithWeka(corpusGer,
+            // "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
+
+            // corpusGer.serialize("data/corpusGer.ser");
+            // corpusGer = null;
+
+            IxTheoCorpus corpusGer = createDesCorpus("data/corpusGerLingAnno.ser");
+            corpusGer.fillTokenMatrices();
+            Writer.printIxTheoCategoryFrequenciesTable(corpusGer, "data/output/IxTheoCategoryFrequencies.csv");
+            Writer.writeArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
+            Writer.writeNeArffWithWeka(corpusGer, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
+
             final long endTime = System.currentTimeMillis();
 
-            System.out.println("Total execution time: " + (endTime - startTime) / 1000/60 +" min");
+            System.out.println("Total execution time: " + (endTime - startTime) / 1000 / 60 + " min");
         } catch (IOException e) {
             System.err.println("IOException ");
             e.printStackTrace();

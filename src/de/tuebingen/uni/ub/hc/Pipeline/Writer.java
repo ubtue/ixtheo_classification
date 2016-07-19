@@ -22,9 +22,9 @@ import weka.core.Instances;
  *
  */
 public class Writer {
-    FileWriter writer;
+    
 
-    public void printARFFImpFeatures(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
+    public static void printARFFImpFeatures(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
             throws IOException {
         StringBuilder toWrite = new StringBuilder();
         // toWrite.append("PPN, title, author, IXTheo_Annotation\n");
@@ -43,24 +43,24 @@ public class Writer {
             }
             toWrite.append("\n");
         }
-        writer = new FileWriter(new File(pathname));
+        FileWriter writer = new FileWriter(new File(pathname));
         writer.write(toWrite.toString());
         writer.flush();
         writer.close();
     }
 
-    public void printIxTheoCategoryFrequenciesTable(IxTheoCorpus corpus, String pathname) throws IOException {
+    public static void printIxTheoCategoryFrequenciesTable(IxTheoCorpus corpus, String pathname) throws IOException {
         StringBuilder toWrite = new StringBuilder();
         for (IxTheoAnnotation ita : corpus.getIxTheoAnnoCount().keySet()) {
             toWrite.append(ita + ", " + corpus.getIxTheoAnnoCount().get(ita) + "\n");
         }
-        writer = new FileWriter(new File(pathname));
+        FileWriter writer  = new FileWriter(new File(pathname));
         writer.write(toWrite.toString());
         writer.flush();
         writer.close();
     }
 
-    public void writeArfflemmaVector(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
+    public static void writeArfflemmaVector(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
             throws IOException {
         StringBuilder toWrite = new StringBuilder();
         toWrite.append("@RELATION ");
@@ -95,27 +95,27 @@ public class Writer {
             }
             toWrite.append("\n");
         }
-        writer = new FileWriter(new File(pathname));
+        FileWriter writer  = new FileWriter(new File(pathname));
         writer.write(toWrite.toString());
         writer.flush();
         writer.close();
     }
 
-    public void writeLemmaArff(String pathname) throws IOException {
-        writer = new FileWriter(new File(pathname));
+    public static void writeLemmaArff(String pathname) throws IOException {
+        FileWriter writer  = new FileWriter(new File(pathname));
         writer.write("");
         writer.flush();
         writer.close();
     }
 
-    public void writeNeArffWithWeka(IxTheoCorpus corpus, String pathname, IxTheoAnnotation anno) throws IOException {
+    public static void writeNeArffWithWeka(IxTheoCorpus corpus, String pathname, IxTheoAnnotation anno) throws IOException {
         FastVector atts;
         FastVector attVals;
         Instances data;
         double[] vals;
         double[] valsRel;
         int i;
-        writer = new FileWriter(new File(pathname));
+        FileWriter writer  = new FileWriter(new File(pathname));
         Vector<String> alphabetVector = corpus.getNeStringVector();
 
         // Fill attribute vector for file header
@@ -139,7 +139,10 @@ public class Writer {
             // - numeric
             int vectorIndex = 0;
             for (String ne : alphabetVector) {
-                if (record.getNamedEntitySet().contains(ne)) {
+                if(record.getNamedEntitySet().isEmpty()){
+                    vals[vectorIndex] = 0;
+                }
+                else if (record.getNamedEntitySet().contains(ne)) {
                     vals[vectorIndex] = 1;
                 } else {
                     vals[vectorIndex] = 0;
