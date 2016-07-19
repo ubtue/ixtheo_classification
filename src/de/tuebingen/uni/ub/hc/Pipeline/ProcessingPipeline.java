@@ -3,10 +3,7 @@ package de.tuebingen.uni.ub.hc.Pipeline;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
-import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
 import de.tuebingen.uni.ub.hc.MARCProcessing.MarcXMLCorpusProcessor;
 import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 
@@ -52,19 +49,21 @@ public class ProcessingPipeline {
     public static void main(String[] args) {
 
         try {
+           
             System.out.println("Reading corpus");
             final long startTime = System.currentTimeMillis();
-            
+//            MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml", "data/output/TestCorpus.xml", 1000);
 //            MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml", "data/test2000CorpusGer.xml", 2000);
 
             // Block for new creation
-            IxTheoCorpus corpusGer = createNewCorpus("data/test2000CorpusGer.xml");
-            corpusGer.serialize("data/corpusGerTest.ser");
+            IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
+            corpusGer.serialize("data/corpusGer.ser");
             LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
-            corpusGer.serialize("data/corpusGerLingAnnoTest.ser");
+            corpusGer.serialize("data/corpusGerLingAnno.ser");
             corpusGer.fillTokenMatrices();
             Writer theWriter = new Writer();
-            theWriter.writeArfflemmaVector(corpusGer, "data/output/lemmaTest.arff", IxTheoAnnotation.KDB);
+            theWriter.writeArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
+            theWriter.writeNeArffWithWeka(corpusGer, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
 //            theWriter.
 
 //            corpusGer.serialize("data/corpusGer.ser");

@@ -101,7 +101,7 @@ public class Writer {
         writer.close();
     }
 
-    public void writeNeArffWithWeka(IxTheoCorpus corpus, String pathname) throws IOException {
+    public void writeNeArffWithWeka(IxTheoCorpus corpus, String pathname, IxTheoAnnotation anno) throws IOException {
         FastVector atts;
         FastVector attVals;
         Instances data;
@@ -112,10 +112,17 @@ public class Writer {
         Vector<String> alphabetVector = corpus.getNeStringVector();
 
         // Fill attribute vector for file header
+        // add all nes as attributes
         atts = new FastVector();
         for (String epsilon : alphabetVector) {
             atts.addElement(new Attribute(epsilon));
         }
+        // add IxTheoAnnotation
+        attVals = new FastVector();
+        attVals.addElement(anno.toShortString());
+        attVals.addElement("not_" + anno.toShortString());
+        atts.addElement(new Attribute("IxTheoAnnotation", attVals));
+
         // 2. create Instances object
         data = new Instances("IxTheoRelation", atts, 0);
 
@@ -128,10 +135,15 @@ public class Writer {
                 if (record.getNamedEntitySet().contains(ne)) {
                     vals[vectorIndex] = 1;
                 } else {
-                    vals[vectorIndex] = 1;
+                    vals[vectorIndex] = 0;
                 }
                 vectorIndex += 1;
             }
+            String result = "not_" + anno.toShortString();
+            if (record.getIxTheoAnnoSet().contains(anno)) {
+                result = anno.toShortString();
+            }
+            vals[data.numAttributes() - 1] = attVals.indexOf(result);
             data.add(new Instance(1.0, vals));
         }
         writer.write(data.toString());

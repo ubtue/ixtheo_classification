@@ -1,6 +1,7 @@
 package de.tuebingen.uni.ub.hc.Corpus;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -28,6 +29,7 @@ public class IxTheoRecord implements Serializable {
     private String subtitle;
     private Vector<CoreLabel> tokenList;
     private String[] words;
+    private HashSet<String> neSet, lemmaSet;
     private Vector<Integer> lemmaVector, neVector;
     private TreeSet<IxTheoAnnotation> ixTheoAnnoSet;
     private TreeSet<IxTheoAnnotation> namedEntitySet;
@@ -43,6 +45,8 @@ public class IxTheoRecord implements Serializable {
         this.title = title;
         this.subtitle = subtitle;
         this.ixTheoAnnoSet = ixTheoAnnoSet;
+        this.neSet = new HashSet<>();
+        this.lemmaSet = new HashSet<>();
         setTokenList(new Vector<>());
         setLemmaVector(new Vector<>());
         setNeVector(new Vector<>());
@@ -144,5 +148,15 @@ public class IxTheoRecord implements Serializable {
     public void setWords(String[] words) {
         this.words = words;
     }
+
+    public HashSet<String> getNeSet() {
+        return neSet;
+    }
+
+    public HashSet<String> getLemmaSet() {
+        return lemmaSet;
+    }
+
+   
 
 }

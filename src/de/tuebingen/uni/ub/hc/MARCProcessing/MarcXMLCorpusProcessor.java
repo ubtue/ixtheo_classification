@@ -34,6 +34,7 @@ public class MarcXMLCorpusProcessor {
          MarcWriter writer = new MarcXmlWriter(fw, "UTF8");
          MarcReader reader = new MarcXmlReader(in);
          int count = 0;
+         int countKDB = 0;
          while (reader.hasNext()) {
              Record record = reader.next();
              DataField currentField = (DataField) record.getVariableField("652");
@@ -45,9 +46,15 @@ public class MarcXMLCorpusProcessor {
              String lang = curControlField.getData().substring(35, 38);
              
              // if record has IXTheo Anno add to our corpus
-             if (currentField != null && lang.contains("ger") && count < sizeOfTestCorpus) {
+             if (currentField != null && lang.contains("ger")&& (countKDB < sizeOfTestCorpus/2 || count < sizeOfTestCorpus/2)) {
+                 
                  writer.write(record);
-                 count +=1;
+                 if(!currentField.find("KDB")){
+                     count += 1;
+                 }
+                 else{
+                     countKDB += 1;
+                 }
              }
          }
          System.out.println(count);

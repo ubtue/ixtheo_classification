@@ -54,6 +54,16 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
     }
     
     /**
+     * This method creates a Vector of the Alphabet of NamedEntities
+     */
+    private void creatNeVectorForCorpus() {
+        this.setNeStringVector(new Vector<>(this.getNeCounts().keySet().size()));
+        for (String s : this.getNeCounts().keySet()) {
+            this.getNeStringVector().add(s);
+        }
+    }
+    
+    /**
      * construct corpus from serialized file
      */
     public void deserialize(String filename) {
@@ -94,8 +104,10 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
                     } else {
                         this.getLemmaCounts().put(lemma, 1);
                     }
+                    rec.getLemmaSet().add(token.lemma());
                 }
                 String ne = token.get(NamedEntityTagAnnotation.class);
+                rec.getNeSet().add(token.get(NamedEntityTagAnnotation.class));
                 if (this.getNeCounts().keySet().contains(ne)) {
                     this.getNeCounts().put(ne, this.getNeCounts().get(ne) + 1);
                 } else {
@@ -104,6 +116,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
             }
         }
         createLemmaVectorForCorpus();
+        creatNeVectorForCorpus();
 //        createVectorsInRecords();
     }
     

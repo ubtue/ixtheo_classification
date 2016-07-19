@@ -58,6 +58,8 @@ public class LinguisticProcessing {
                 // this is the text of the token
                 String word = token.get(TextAnnotation.class);
                 record.getTokenList().add(token);
+//                record.getLemmaSet().add(token.lemma());
+//                record.getNeSet().add(token.get(NamedEntityTagAnnotation.class));
             }
         }
     }
