@@ -29,10 +29,10 @@ public class Writer {
         StringBuilder toWrite = new StringBuilder();
         // toWrite.append("PPN, title, author, IXTheo_Annotation\n");
         toWrite.append(
-                "@RELATION IX_Theo_Anno\n  @ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  String  \n@ATTRIBUTE secondAuthorGND  String\n@ATTRIBUTE class   {1,0}\n @DATA\n");
+                "@RELATION IX_Theo_Anno\n@ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  STRING  \n@ATTRIBUTE secondAuthorGND  STRING\n@ATTRIBUTE class   {1,0}\n@DATA\n");
         for (IxTheoRecord f : corpus) {
             // System.out.println(f.getTitle());
-            toWrite.append(f.getTitle().replaceAll("\\p{Punct}", ""));
+            toWrite.append("'" + f.getTitle().replaceAll("\\p{Punct}", ""));
             toWrite.append("','" + f.getSubtitle().replaceAll("\\p{Punct}", ""));
             toWrite.append("'," + f.getAuthorGND().replaceAll("\\D", "") + ",");
             toWrite.append(f.getSecAuthorGND().replaceAll("\\D", "") + ",");
@@ -42,6 +42,17 @@ public class Writer {
                 toWrite.append("0");
             }
             toWrite.append("\n");
+        }
+        writer = new FileWriter(new File(pathname));
+        writer.write(toWrite.toString());
+        writer.flush();
+        writer.close();
+    }
+
+    public void printIxTheoCategoryFrequenciesTable(IxTheoCorpus corpus, String pathname) throws IOException {
+        StringBuilder toWrite = new StringBuilder();
+        for (IxTheoAnnotation ita : corpus.getIxTheoAnnoCount().keySet()) {
+            toWrite.append(ita + ", " + corpus.getIxTheoAnnoCount().get(ita) + "\n");
         }
         writer = new FileWriter(new File(pathname));
         writer.write(toWrite.toString());
@@ -90,13 +101,9 @@ public class Writer {
         writer.close();
     }
 
-    public void printIxTheoCategoryFrequenciesTable(IxTheoCorpus corpus, String pathname) throws IOException {
-        StringBuilder toWrite = new StringBuilder();
-        for (IxTheoAnnotation ita : corpus.getIxTheoAnnoCount().keySet()) {
-            toWrite.append(ita + ", " + corpus.getIxTheoAnnoCount().get(ita) + "\n");
-        }
+    public void writeLemmaArff(String pathname) throws IOException {
         writer = new FileWriter(new File(pathname));
-        writer.write(toWrite.toString());
+        writer.write("");
         writer.flush();
         writer.close();
     }
@@ -147,13 +154,6 @@ public class Writer {
             data.add(new Instance(1.0, vals));
         }
         writer.write(data.toString());
-        writer.flush();
-        writer.close();
-    }
-
-    public void writeLemmaArff(String pathname) throws IOException {
-        writer = new FileWriter(new File(pathname));
-        writer.write("");
         writer.flush();
         writer.close();
     }

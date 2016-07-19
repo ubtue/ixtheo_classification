@@ -64,7 +64,6 @@ public class ProcessingPipeline {
             Writer theWriter = new Writer();
             theWriter.writeArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
             theWriter.writeNeArffWithWeka(corpusGer, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
-//            theWriter.
 
 //            corpusGer.serialize("data/corpusGer.ser");
 //            corpusGer = null;
@@ -76,7 +75,7 @@ public class ProcessingPipeline {
  
             final long endTime = System.currentTimeMillis();
 
-            System.out.println("Total execution time: " + (endTime - startTime) / 1000);
+            System.out.println("Total execution time: " + (endTime - startTime) / 1000/60 +" min");
         } catch (IOException e) {
             System.err.println("IOException ");
             e.printStackTrace();
