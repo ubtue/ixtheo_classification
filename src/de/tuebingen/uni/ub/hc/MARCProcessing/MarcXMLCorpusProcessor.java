@@ -158,6 +158,14 @@ public class MarcXMLCorpusProcessor {
                 // when record is filled add to corpus
                 corpus.addRecord(new IxTheoRecord(ppn, lang, author, authorGND, secAuthor, secAuthorGND, title,
                         subtitle, ixTheoAnnoSet));
+                for(IxTheoAnnotation anno : ixTheoAnnoSet){
+                    if(corpus.getIxTheoAnnoCount().containsKey(anno)){
+                        corpus.getIxTheoAnnoCount().put(anno, corpus.getIxTheoAnnoCount().get(anno)+1);
+                    }
+                    else{
+                        corpus.getIxTheoAnnoCount().put(anno, 1);
+                    }
+                }
             }
         }
         return corpus;
