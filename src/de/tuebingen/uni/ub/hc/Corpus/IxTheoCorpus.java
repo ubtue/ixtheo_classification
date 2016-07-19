@@ -110,7 +110,6 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
                 
                 String ne = "";
                 if(!token.get(NamedEntityTagAnnotation.class).equals("O")){
-                    System.out.println("In Corpus adding ne: "+token.lemma());
                     ne = token.lemma();
                     rec.addToNeSet(ne);
                     if (this.getNeCounts().keySet().contains(ne)) {

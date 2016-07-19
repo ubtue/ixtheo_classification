@@ -165,6 +165,7 @@ public class MarcXMLCorpusProcessor {
                     else{
                         corpus.getIxTheoAnnoCount().put(anno, 1);
                     }
+                    
                 }
             }
         }
