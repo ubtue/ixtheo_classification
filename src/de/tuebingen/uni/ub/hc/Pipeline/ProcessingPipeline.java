@@ -50,14 +50,14 @@ public class ProcessingPipeline {
 
             System.out.println("Reading corpus");
             final long startTime = System.currentTimeMillis();
-            // MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
-            // "data/output/TestCorpus.xml", 1000);
+//             MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
+//             "data/TestCorpus.xml", 10000);
             // MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml",
             // "data/test2000CorpusGer.xml", 2000);
 
             // Block for new creation
 //            MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
-//                     "data/output/TestCorpus.xml", 10);
+//                     "data/TestCorpus.xml", 10);
              IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
              corpusGer.serialize("data/corpusGer.ser");
              LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
@@ -76,7 +76,7 @@ public class ProcessingPipeline {
 //            System.out.println("filled Matrices");
 //            Writer.writeLemmaArff(corpusGer, "data/output/test.txt");
 //            Writer.printIxTheoCategoryFrequenciesTable(corpusGer, "data/output/IxTheoCategoryFrequencies.csv");
-//            Writer.writeArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
+//            Writer.writeLemmaArffWithWeka(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
 //            Writer.writeNeArffWithWeka(corpusGer, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
 //            System.out.println("wrote files");
              
