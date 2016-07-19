@@ -50,6 +50,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
         this.setLemmaStringVector(new Vector<>(this.getLemmaCounts().keySet().size()));
         for (String s : this.getLemmaCounts().keySet()) {
             this.getLemmaStringVector().add(s);
+            System.out.println("adding lemma: "+s);
         }
     }
     
@@ -60,6 +61,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
         this.setNeStringVector(new Vector<>(this.getNeCounts().keySet().size()));
         for (String s : this.getNeCounts().keySet()) {
             this.getNeStringVector().add(s);
+            System.out.println("adding s: "+s);
         }
     }
     
@@ -96,7 +98,6 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
                 CoreLabel token = rec.getTokenList().get(i);
                 // check in posTagList is corresponding POS is significant
                 Matcher m = pattern.matcher(token.get(PartOfSpeechAnnotation.class));
-
                 if (!m.matches()) {
                     String lemma = token.lemma();
                     if (this.getLemmaCounts().keySet().contains(lemma)) {
@@ -106,17 +107,27 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
                     }
                     rec.getLemmaSet().add(token.lemma());
                 }
-                String ne = token.get(NamedEntityTagAnnotation.class);
-                rec.getNeSet().add(token.get(NamedEntityTagAnnotation.class));
-                if (this.getNeCounts().keySet().contains(ne)) {
-                    this.getNeCounts().put(ne, this.getNeCounts().get(ne) + 1);
-                } else {
-                    this.getNeCounts().put(ne, 1);
+                
+                String ne = "";
+                if(!token.get(NamedEntityTagAnnotation.class).equals("O")){
+                    ne = token.lemma();
+                    rec.getNeSet().add(ne);
+                    if (this.getNeCounts().keySet().contains(ne)) {
+                        this.getNeCounts().put(ne, this.getNeCounts().get(ne) + 1);
+                    } else {
+                        this.getNeCounts().put(ne, 1);
+                    }
                 }
             }
         }
         createLemmaVectorForCorpus();
         creatNeVectorForCorpus();
+//        for(String s : this.lemmaStringVector){
+//            System.out.println("lemma: " + s);
+//        }
+//        for(String s : this.neStringVector){
+//            System.out.println("NAMED ENTITY: " + s);
+//        }
 //        createVectorsInRecords();
     }
     

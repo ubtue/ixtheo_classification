@@ -101,9 +101,11 @@ public class Writer {
         writer.close();
     }
 
-    public static void writeLemmaArff(String pathname) throws IOException {
+    public static void writeLemmaArff(IxTheoCorpus corpus, String pathname) throws IOException {
         FileWriter writer  = new FileWriter(new File(pathname));
-        writer.write("");
+        for(String s : corpus.getNeStringVector()){
+        writer.write(s + "\n");
+        }
         writer.flush();
         writer.close();
     }
@@ -139,7 +141,7 @@ public class Writer {
             // - numeric
             int vectorIndex = 0;
             for (String ne : alphabetVector) {
-                if(record.getNamedEntitySet().isEmpty()){
+                if(record.getNamedEntitySet() == null){
                     vals[vectorIndex] = 0;
                 }
                 else if (record.getNamedEntitySet().contains(ne)) {
@@ -157,6 +159,7 @@ public class Writer {
             data.add(new Instance(1.0, vals));
         }
         writer.write(data.toString());
+//        System.out.println(data.toString());
         writer.flush();
         writer.close();
     }

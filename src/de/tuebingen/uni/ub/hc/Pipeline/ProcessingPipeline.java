@@ -56,28 +56,32 @@ public class ProcessingPipeline {
             // "data/test2000CorpusGer.xml", 2000);
 
             // Block for new creation
-            // IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
-            // corpusGer.serialize("data/corpusGer.ser");
-            // LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
-            // corpusGer.serialize("data/corpusGerLingAnno.ser");
-            // corpusGer.fillTokenMatrices();
-            // Writer theWriter = new Writer();
-            // theWriter.writeArfflemmaVector(corpusGer,
-            // "data/output/lemma.arff", IxTheoAnnotation.KDB);
-            // theWriter.writeNeArffWithWeka(corpusGer,
-            // "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
+            MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
+                     "data/output/TestCorpus.xml", 10);
+             IxTheoCorpus corpusGer = createNewCorpus("data/output/TestCorpus.xml");
+             corpusGer.serialize("data/corpusGerTest.ser");
+             LinguisticProcessing ling = new LinguisticProcessing(corpusGer);
+             corpusGer.serialize("data/corpusGerLingAnnoTest.ser");
+             corpusGer.fillTokenMatrices();
+             Writer theWriter = new Writer();
+             theWriter.writeArfflemmaVector(corpusGer,
+             "data/output/lemma.arff", IxTheoAnnotation.KDB);
+             theWriter.writeNeArffWithWeka(corpusGer,
+             "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
 
             // corpusGer.serialize("data/corpusGer.ser");
             // corpusGer = null;
 
-            IxTheoCorpus corpusGer = createDesCorpus("data/corpusGerLingAnno.ser");
-            corpusGer.fillTokenMatrices();
-            Writer.printIxTheoCategoryFrequenciesTable(corpusGer, "data/output/IxTheoCategoryFrequencies.csv");
-            Writer.writeArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
-            Writer.writeNeArffWithWeka(corpusGer, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
-
+//            IxTheoCorpus corpusGer = createDesCorpus("data/corpusGerLingAnno.ser");
+//            corpusGer.fillTokenMatrices();
+//            System.out.println("filled Matrices");
+//            Writer.writeLemmaArff(corpusGer, "data/output/test.txt");
+//            Writer.printIxTheoCategoryFrequenciesTable(corpusGer, "data/output/IxTheoCategoryFrequencies.csv");
+//            Writer.writeArfflemmaVector(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
+//            Writer.writeNeArffWithWeka(corpusGer, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
+//            System.out.println("wrote files");
+             
             final long endTime = System.currentTimeMillis();
-
             System.out.println("Total execution time: " + (endTime - startTime) / 1000 / 60 + " min");
         } catch (IOException e) {
             System.err.println("IOException ");

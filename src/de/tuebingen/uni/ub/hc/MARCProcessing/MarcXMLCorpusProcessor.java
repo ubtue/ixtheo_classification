@@ -26,39 +26,42 @@ import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 public class MarcXMLCorpusProcessor {
     private static InputStream in;
     private static IxTheoCorpus corpus;
-    
-    public static void writeSubcorpusXML(String inputFilename, String outputFilename, int sizeOfTestCorpus) throws FileNotFoundException{
-        in = new FileInputStream(inputFilename);
-      FileOutputStream fw = new FileOutputStream(new
-         File(outputFilename));
-         MarcWriter writer = new MarcXmlWriter(fw, "UTF8");
-         MarcReader reader = new MarcXmlReader(in);
-         int count = 0;
-         int countKDB = 0;
-         while (reader.hasNext()) {
-             Record record = reader.next();
-             DataField currentField = (DataField) record.getVariableField("652");
-             
-             ControlField curControlField = (ControlField) record.getVariableField("008");
 
-             // the three-character MARC language code takes character
-             // positions 35-37
-             String lang = curControlField.getData().substring(35, 38);
-             
-             // if record has IXTheo Anno add to our corpus
-             if (currentField != null && lang.contains("ger")&& (countKDB < sizeOfTestCorpus/2 || count < sizeOfTestCorpus/2)) {
-                 
-                 writer.write(record);
-                 if(!currentField.find("KDB")){
-                     count += 1;
-                 }
-                 else{
-                     countKDB += 1;
-                 }
-             }
-         }
-         System.out.println(count);
-         writer.close();
+    public static void writeSubcorpusXML(String inputFilename, String outputFilename, int sizeOfTestCorpus)
+            throws FileNotFoundException {
+        in = new FileInputStream(inputFilename);
+        FileOutputStream fw = new FileOutputStream(new File(outputFilename));
+        MarcWriter writer = new MarcXmlWriter(fw, "UTF8");
+        MarcReader reader = new MarcXmlReader(in);
+        int count = 0;
+        int countKDB = 0;
+        while (reader.hasNext()) {
+            Record record = reader.next();
+            DataField currentField = (DataField) record.getVariableField("652");
+
+            ControlField curControlField = (ControlField) record.getVariableField("008");
+
+            // the three-character MARC language code takes character
+            // positions 35-37
+            String lang = curControlField.getData().substring(35, 38);
+
+            // if record has IXTheo Anno add to our corpus
+            if (currentField != null && lang.contains("ger") && countKDB < sizeOfTestCorpus / 2) {
+                if (!currentField.find("KDB")) {
+                    if (count < sizeOfTestCorpus / 2) {
+                        writer.write(record);
+                        count += 1;
+                    }
+                } else {
+                    if (countKDB < sizeOfTestCorpus / 2) {
+                        writer.write(record);
+                        countKDB += 1;
+                    }
+                }
+            }
+        }
+        System.out.println(count);
+        writer.close();
     }
 
     public static IxTheoCorpus processMARCRecords(String pathname) throws FileNotFoundException {
@@ -138,23 +141,23 @@ public class MarcXMLCorpusProcessor {
                 // get the title proper
                 subfield = currentField.getSubfield('a');
                 title = subfield.getData();
-                
-                //take out seperator, because it's not part of the title itself
+
+                // take out seperator, because it's not part of the title itself
                 title = title.replaceAll("\\u0098", "");
-                
+
                 subfield = currentField.getSubfield('b');
                 if (subfield != null) {
                     subtitle = subfield.getData();
                 }
-//                // This field contains a publisher if no Author is named
-//                subfield = currentField.getSubfield('c');
-//                if (subfield != null && author.equalsIgnoreCase("0")) {
-//                    author = subfield.getData();
-//                }
+                // // This field contains a publisher if no Author is named
+                // subfield = currentField.getSubfield('c');
+                // if (subfield != null && author.equalsIgnoreCase("0")) {
+                // author = subfield.getData();
+                // }
 
                 // when record is filled add to corpus
-                corpus.addRecord(new IxTheoRecord(ppn, lang, author, authorGND, secAuthor, secAuthorGND, title, subtitle,
-                        ixTheoAnnoSet));
+                corpus.addRecord(new IxTheoRecord(ppn, lang, author, authorGND, secAuthor, secAuthorGND, title,
+                        subtitle, ixTheoAnnoSet));
             }
         }
         return corpus;
