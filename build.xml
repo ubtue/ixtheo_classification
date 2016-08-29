@@ -54,20 +54,28 @@
 
     <target name="run" depends="dist" description="Run">
         <exec executable="rsync">
-            <arg value="-az" />
+            <arg value="-auz" />
             <arg value="${jarfile}" />
-            <arg value="lib/" />
-            <arg value="data/" />
             <arg value="${scp-url}" />
+        </exec>
+        <exec executable="rsync">
+            <arg value="-auz" />
+            <arg value="data/" />
+            <arg value="${scp-url}/data/" />
+        </exec>
+        <exec executable="rsync">
+            <arg value="-auz" />
+            <arg value="lib/" />
+            <arg value="${scp-url}/lib/" />
         </exec>
         <exec executable="ssh">
             <arg value="${scp-user}@${scp-server}" />
-            <arg value="eval 'cd ${scp-target} ; java -cp ${jarfilename}:${classpath} ${main-class}'" />
+            <arg value="eval 'cd ${scp-target} ; java -cp ${jarfilename}:${classpath} -Xms8G -Xmx32G -d64 ${main-class}'" />
         </exec>
         <exec executable="rsync">
-            <arg value="-az" />
-            <arg value="${scp-url}" />
-            <arg value="." /> 
+            <arg value="-auz" />
+            <arg value="${scp-url}/data/" />
+            <arg value="data/" />
         </exec>
     </target>
 

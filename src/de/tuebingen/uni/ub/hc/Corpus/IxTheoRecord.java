@@ -1,10 +1,7 @@
 package de.tuebingen.uni.ub.hc.Corpus;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.TreeSet;
-import java.util.Vector;
+import java.util.*;
 
 import de.tuebingen.uni.ub.hc.enums.IxTheoAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -27,14 +24,15 @@ public class IxTheoRecord implements Serializable {
     private String language;
     private String title;
     private String subtitle;
-    private Vector<CoreLabel> tokenList;
+    private List<CoreLabel> tokenList;
     private String[] words;
     private HashSet<String> neSet, lemmaSet;
-    private Vector<Integer> lemmaVector, neVector;
+    private List<Integer> lemmaVector, neVector;
     private TreeSet<IxTheoAnnotation> ixTheoAnnoSet;
 
     public IxTheoRecord(String ppn, String lang, String author, String authorGND, String secAuthor, String secAuthorGND,
             String title, String subtitle, TreeSet<IxTheoAnnotation> ixTheoAnnoSet) {
+
         this.ppnNumber = ppn;
         this.language = lang;
         this.author = author;
@@ -46,17 +44,21 @@ public class IxTheoRecord implements Serializable {
         this.ixTheoAnnoSet = ixTheoAnnoSet;
         this.neSet = new HashSet<>();
         this.lemmaSet = new HashSet<>();
-        setTokenList(new Vector<>());
-        setLemmaVector(new Vector<>());
-        setNeVector(new Vector<>());
+        setTokenList(new ArrayList<>());
+        setLemmaVector(new ArrayList<>());
+        setNeVector(new ArrayList<>());
+    }
+
+    private String getStringOrEmpty(String string) {
+        return string != null ? string : "";
     }
 
     public String getAuthor() {
-        return author;
+        return getStringOrEmpty(author);
     }
 
     public String getAuthorGND() {
-        return authorGND;
+        return getStringOrEmpty(authorGND);
     }
 
     public TreeSet<IxTheoAnnotation> getIxTheoAnnoSet() {
@@ -64,38 +66,38 @@ public class IxTheoRecord implements Serializable {
     }
 
     public String getLanguage() {
-        return language;
+        return getStringOrEmpty(language);
     }
 
-    public Vector<Integer> getLemmaVector() {
+    public List<Integer> getLemmaVector() {
         return lemmaVector;
     }
 
-    public Vector<Integer> getNeVector() {
+    public List<Integer> getNeVector() {
         return neVector;
     }
 
     public String getPpnNumber() {
-        return ppnNumber;
+        return getStringOrEmpty(ppnNumber);
     }
 
     public String getSecAuthor() {
-        return secAuthor;
+        return getStringOrEmpty(secAuthor);
     }
 
     public String getSecAuthorGND() {
-        return secAuthorGND;
+        return getStringOrEmpty(secAuthorGND);
     }
 
     public String getSubtitle() {
-        return subtitle;
+        return getStringOrEmpty(subtitle);
     }
 
     public String getTitle() {
-        return title;
+        return getStringOrEmpty(title);
     }
 
-    public Vector<CoreLabel> getTokenList() {
+    public List<CoreLabel> getTokenList() {
         return tokenList;
     }
 
@@ -105,9 +107,8 @@ public class IxTheoRecord implements Serializable {
 
     public String lemmaVectortoString() {
         StringBuilder toWrite = new StringBuilder();
-        Iterator<Integer> myIterator = getLemmaVector().iterator();
-        while (myIterator.hasNext()) {
-            toWrite.append(myIterator.next());
+        for (final Integer integer : getLemmaVector()) {
+            toWrite.append(integer);
             toWrite.append(", ");
         }
         return toWrite.toString();
@@ -115,24 +116,23 @@ public class IxTheoRecord implements Serializable {
 
     public String neVectortoString() {
         StringBuilder toWrite = new StringBuilder();
-        Iterator<Integer> myIterator = getNeVector().iterator();
-        while (myIterator.hasNext()) {
-            toWrite.append(myIterator.next());
+        for (final Integer integer : getNeVector()) {
+            toWrite.append(integer);
             toWrite.append(", ");
         }
         return toWrite.toString();
     }
 
-    public void setLemmaVector(Vector<Integer> lemmaVector) {
+    public void setLemmaVector(List<Integer> lemmaVector) {
         this.lemmaVector = lemmaVector;
     }
 
-    public void setNeVector(Vector<Integer> neVector) {
+    public void setNeVector(List<Integer> neVector) {
         this.neVector = neVector;
     }
 
 
-    public void setTokenList(Vector<CoreLabel> tokenList) {
+    public void setTokenList(List<CoreLabel> tokenList) {
         this.tokenList = tokenList;
     }
 

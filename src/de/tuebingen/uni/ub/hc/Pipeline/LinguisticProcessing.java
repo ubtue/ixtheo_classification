@@ -1,7 +1,10 @@
 package de.tuebingen.uni.ub.hc.Pipeline;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Queue;
+import java.util.concurrent.*;
 
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
@@ -20,27 +23,47 @@ public class LinguisticProcessing {
 
     public LinguisticProcessing(IxTheoCorpus corpus) {
         this.corpus = corpus;
-        annotate();
+        try {
+            annotate();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void annotate() {
+    /**
+     * Runs annotates concurrently in 8 threads so it uses the 8 cores of sobek's cpu.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public void annotate() throws ExecutionException, InterruptedException {
 //        Properties props = new Properties();
 //        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
-        Properties germanProperties = StringUtils.argsToProperties(
-                new String[] { "tokenize, ssplit, pos, lemma, ner", "StanfordCoreNLP-german.properties" });
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(germanProperties);
-        for (IxTheoRecord record : corpus) {
-            runStanfordCoreNLPPipeline(record, pipeline);
+        final List<Future<?>> futures = new ArrayList<>();
+        final ConcurrentLinkedQueue<IxTheoRecord> records = corpus.getConcurrentRecords();
+        ExecutorService executor = Executors.newFixedThreadPool(8);
+        for (int i = 0; i < 8; i++) {
+             futures.add(executor.submit(() -> {
+                Properties germanProperties = StringUtils.argsToProperties(
+                        "tokenize, ssplit, pos, lemma, ner", "StanfordCoreNLP-german.properties");
+                StanfordCoreNLP pipeline = new StanfordCoreNLP(germanProperties);
+
+                IxTheoRecord record;
+                while ((record = records.poll()) != null) {
+                    runStanfordCoreNLPPipeline(record, pipeline);
+                }
+            }));
         }
+        for (final Future<?> future : futures) {
+            future.get();
+        }
+        executor.shutdown();
     }
 
     private void runStanfordCoreNLPPipeline(IxTheoRecord record, StanfordCoreNLP pipeline) {
         String title = record.getTitle();
-        // read some text in the text variable
-        String text = title;
 
-        // create an empty Annotation just with the given text
-        Annotation document = new Annotation(text);
+        // create an empty Annotation just with the given title
+        Annotation document = new Annotation(title);
 
         // run all Annotators on this text
         pipeline.annotate(document);
@@ -52,19 +75,15 @@ public class LinguisticProcessing {
         for (CoreMap sentence : sentences) {
             // traversing the words in the current sentence
             // a CoreLabel is a CoreMap with additional token-specific methods
-            StringBuilder lemmas = new StringBuilder();
-            StringBuilder nes = new StringBuilder();
 
             for (CoreLabel token : sentence.get(TokensAnnotation.class)) {
                 // this is the text of the token
-                String word = token.get(TextAnnotation.class);
+                // String word = token.get(TextAnnotation.class);
                 record.getTokenList().add(token);
                 if(!token.get(NamedEntityTagAnnotation.class).equals("O")){
                     record.addToNeSet(token.lemma());
                 }
                 record.getLemmaSet().add(token.lemma());
-//                record.getLemmaSet().add(token.lemma());
-//                record.getNeSet().add(token.get(NamedEntityTagAnnotation.class));
             }
         }
     }

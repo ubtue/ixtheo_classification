@@ -124,14 +124,16 @@ public enum IxTheoAnnotation {
         return IxTheoAnnotation.valueOf(s);
     }
 
-    private String description;
+    private final String description;
+    private final String shortDescription;
 
     private IxTheoAnnotation(String description) {
         this.description = description;
+        this.shortDescription = this.description.split(" ")[0];
     }
 
     public String toShortString() {
-        return description.split(" ")[0];
+        return shortDescription;
     }
 
     @Override

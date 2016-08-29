@@ -3,8 +3,7 @@ package de.tuebingen.uni.ub.hc.Pipeline;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoCorpus;
 import de.tuebingen.uni.ub.hc.Corpus.IxTheoRecord;
@@ -24,78 +23,67 @@ import weka.core.Instances;
 public class Writer {
     
 
-    public static void printARFFImpFeatures(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
-            throws IOException {
-        StringBuilder toWrite = new StringBuilder();
-        // toWrite.append("PPN, title, author, IXTheo_Annotation\n");
-        toWrite.append(
-                "@RELATION IX_Theo_Anno\n@ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  STRING  \n@ATTRIBUTE secondAuthorGND  STRING\n@ATTRIBUTE class   {1,0}\n@DATA\n");
-        for (IxTheoRecord f : corpus) {
-            toWrite.append("'" + f.getTitle().replaceAll("\\p{Punct}", ""));
-            toWrite.append("','" + f.getSubtitle().replaceAll("\\p{Punct}", ""));
-            toWrite.append("'," + f.getAuthorGND().replaceAll("\\D", "") + ",");
-            toWrite.append(f.getSecAuthorGND().replaceAll("\\D", "") + ",");
-            if (f.getIxTheoAnnoSet().contains(IxTheo_Anno)) {
-                toWrite.append("1");
-            } else {
-                toWrite.append("0");
+    public static void printARFFImpFeatures(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno) {
+        try(FileWriter writer = new FileWriter(new File(pathname))) {
+            // toWrite.append("PPN, title, author, IXTheo_Annotation\n");
+            writer.write(
+                    "@RELATION IX_Theo_Anno\n@ATTRIBUTE title STRING \n@ATTRIBUTE subtitle  STRING \n@ATTRIBUTE authorGND  STRING  \n@ATTRIBUTE secondAuthorGND  STRING\n@ATTRIBUTE class   {1,0}\n@DATA\n");
+            for (IxTheoRecord f : corpus) {
+                writer.write("'" + f.getTitle().replaceAll("\\p{Punct}", ""));
+                writer.write("','" + f.getSubtitle().replaceAll("\\p{Punct}", ""));
+                writer.write("'," + f.getAuthorGND().replaceAll("\\D", "") + ",");
+                writer.write(f.getSecAuthorGND().replaceAll("\\D", "") + ",");
+                if (f.getIxTheoAnnoSet().contains(IxTheo_Anno)) {
+                    writer.write("1");
+                } else {
+                    writer.write("0");
+                }
+                writer.write("\n");
             }
-            toWrite.append("\n");
+        }catch (IOException e) {
+            e.printStackTrace();
         }
-        FileWriter writer = new FileWriter(new File(pathname));
-        writer.write(toWrite.toString());
-        writer.flush();
-        writer.close();
     }
 
     public static void printIxTheoCategoryFrequenciesTable(IxTheoCorpus corpus, String pathname) throws IOException {
-        StringBuilder toWrite = new StringBuilder();
-        for (IxTheoAnnotation ita : corpus.getIxTheoAnnoCount().keySet()) {
-            toWrite.append(ita + ", " + corpus.getIxTheoAnnoCount().get(ita) + "\n");
-        }
         FileWriter writer  = new FileWriter(new File(pathname));
-        writer.write(toWrite.toString());
+        for (IxTheoAnnotation ita : corpus.getIxTheoAnnoCount().keySet()) {
+            writer.write(ita + ", " + corpus.getIxTheoAnnoCount().get(ita) + "\n");
+        }
         writer.flush();
         writer.close();
     }
 
     public static void writeArfflemmaVector(IxTheoCorpus corpus, String pathname, IxTheoAnnotation IxTheo_Anno)
             throws IOException {
-        StringBuilder toWrite = new StringBuilder();
-        toWrite.append("@RELATION ");
-        toWrite.append(IxTheo_Anno.toShortString());
-        toWrite.append("\n");
-        // toWrite.append("PPN, ");
+        FileWriter writer  = new FileWriter(new File(pathname));
+        writer.write("@RELATION ");
+        writer.write(IxTheo_Anno.toShortString());
+        writer.write("\n");
+        // writer.write("PPN, ");
 
         // append all words as header
-        // toWrite.append(corpus.printStringLemmaVector());
-        Iterator<String> myIterator = corpus.getLemmaStringVector().iterator();
-        while (myIterator.hasNext()) {
-            toWrite.append("@ATTRIBUTE ");
-            toWrite.append(myIterator.next().replaceAll("\\W", ""));
-            toWrite.append(" NUMERIC");
-            toWrite.append("\n");
+        // writer.write(corpus.printStringLemmaVector());
+        for (final String s : corpus.getLemmaStringVector()) {
+            writer.write("@ATTRIBUTE ");
+            writer.write(s.replaceAll("\\W", ""));
+            writer.write(" NUMERIC\n");
         }
         // append class to classify
-        toWrite.append("@ATTRIBUTE class {y,n}");
-        toWrite.append("\n");
-        toWrite.append("@DATA");
-        toWrite.append("\n");
+        writer.write("@ATTRIBUTE class {y,n}\n@DATA\n");
         for (IxTheoRecord f : corpus) {
 
             // System.out.println(f.getTitle());
-            // toWrite.append(f.getPpnNumber());
-            // toWrite.append(",");
-            toWrite.append(f.lemmaVectortoString());
+            // writer.write(f.getPpnNumber());
+            // writer.write(",");
+            writer.write(f.lemmaVectortoString());
             if (f.getIxTheoAnnoSet().contains(IxTheo_Anno)) {
-                toWrite.append("y");
+                writer.write("y");
             } else {
-                toWrite.append("n");
+                writer.write("n");
             }
-            toWrite.append("\n");
+            writer.write("\n");
         }
-        FileWriter writer  = new FileWriter(new File(pathname));
-        writer.write(toWrite.toString());
         writer.flush();
         writer.close();
     }
@@ -103,7 +91,7 @@ public class Writer {
     public static void writeLemmaArff(IxTheoCorpus corpus, String pathname) throws IOException {
         FileWriter writer  = new FileWriter(new File(pathname));
         for(String s : corpus.getNeStringVector()){
-        writer.write(s + "\n");
+            writer.write(s + "\n");
         }
         writer.flush();
         writer.close();
@@ -117,7 +105,7 @@ public class Writer {
         double[] valsRel;
         int i;
         FileWriter writer  = new FileWriter(new File(pathname));
-        Vector<String> alphabetVector = corpus.getNeStringVector();
+        ArrayList<String> alphabetVector = corpus.getNeStringVector();
 
         // Fill attribute vector for file header
         // add all nes as attributes
@@ -171,7 +159,7 @@ public class Writer {
         double[] valsRel;
         int i;
         FileWriter writer  = new FileWriter(new File(pathname));
-        Vector<String> alphabetVector = corpus.getLemmaStringVector();
+        ArrayList<String> alphabetVector = corpus.getLemmaStringVector();
 
         // Fill attribute vector for file header
         // add all nes as attributes
@@ -187,6 +175,8 @@ public class Writer {
 
         // 2. create Instances object
         data = new Instances("IxTheoRelation", atts, 0);
+
+        System.out.println(corpus.getNumRecordsInCorpus() + " * " + alphabetVector.size() + " * 64 Bit" + " = " + ((corpus.getNumRecordsInCorpus() / 1024.0) * (alphabetVector.size() / 1024.0) * 64 / 1024) + " GB");
 
         for (IxTheoRecord record : corpus) {
             vals = new double[data.numAttributes()]; // important: needs NEW

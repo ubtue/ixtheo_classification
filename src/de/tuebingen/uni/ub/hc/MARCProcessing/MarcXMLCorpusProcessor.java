@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import org.marc4j.MarcReader;
@@ -64,6 +65,50 @@ public class MarcXMLCorpusProcessor {
         writer.close();
     }
 
+    public static TreeSet<IxTheoAnnotation> getAnnotations(Record record) {
+        DataField field652 = (DataField) record.getVariableField("652");
+        if (field652 == null) {
+            return null;
+        }
+        TreeSet<IxTheoAnnotation> ixTheoAnnoSet = new TreeSet<>();
+        String data = field652.getSubfieldsAsString("a");
+        StringTokenizer annotationTokenizer = new StringTokenizer(data, ":");
+        while (annotationTokenizer.hasMoreTokens()) {
+            ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheoAnnotation(annotationTokenizer.nextToken().trim()));
+        }
+        return ixTheoAnnoSet;
+    }
+
+    public static String getLanguage(Record record) {
+        ControlField field008 = (ControlField) record.getVariableField("008");
+        String data = field008.getData();
+        // the three-character MARC language code takes character
+        // positions 35-37
+        return data.substring(35, 38);
+    }
+
+    public static String getAuthorName(DataField dataField) {
+        if (dataField == null) {
+            return null;
+        }
+        Subfield subfield = dataField.getSubfield('a');
+        if (subfield != null) {
+            return subfield.getData();
+        }
+        return null;
+    }
+
+    public static String getAuthorGND(DataField dataField) {
+        if (dataField == null) {
+            return null;
+        }
+        Subfield subfield = dataField.getSubfield('0');
+        if (subfield != null) {
+            return subfield.getData();
+        }
+        return null;
+    }
+
     public static IxTheoCorpus processMARCRecords(String pathname) throws FileNotFoundException {
         in = new FileInputStream(pathname);
         corpus = new IxTheoCorpus();
@@ -83,67 +128,29 @@ public class MarcXMLCorpusProcessor {
             String authorGND = "0";
             String secAuthorGND = "0";
             // get control field with tag 652 IXTHEOAnno
-            DataField currentField = (DataField) record.getVariableField("652");
-            // if record has IXTheo Anno add to our corpus
-            if (currentField != null) {
-                ppn = record.getControlNumber();
-                TreeSet<IxTheoAnnotation> ixTheoAnnoSet = new TreeSet<>();
-                // get Annotation(s)
-                data = currentField.getSubfieldsAsString("a");
-                if (!data.contains(":")) {
-                    ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheoAnnotation(data));
-                } else {
-                    String[] annotations = data.split(":");
-                    for (int i = 0; i < annotations.length; i++) {
-                        ixTheoAnnoSet.add(IxTheoAnnotation.stringToIxTheoAnnotation(annotations[i].trim()));
-                    }
-                }
-                // get Language
-                // get control field with tag 008
-                ControlField curControlField = (ControlField) record.getVariableField("008");
-                data = curControlField.getData();
+            DataField currentField;
 
-                // the three-character MARC language code takes character
-                // positions 35-37
-                lang = data.substring(35, 38);
+            TreeSet<IxTheoAnnotation> ixTheoAnnoSet = getAnnotations(record);
+            if (ixTheoAnnoSet != null) {
+                ppn = record.getControlNumber();
+                lang = getLanguage(record);
 
                 // get author 101
                 currentField = (DataField) record.getVariableField("100");
+                author = getAuthorName(currentField);
+                authorGND = getAuthorGND(currentField);
 
-                // System.out.println(record.toString());
-                if (currentField != null) {
-                    subfield = currentField.getSubfield('a');
-                    if (subfield != null) {
-                        author = subfield.getData();
-                    }
-                    subfield = currentField.getSubfield('0');
-                    if (subfield != null) {
-                        authorGND = subfield.getData();
-                    }
-                }
                 // get second author
                 currentField = (DataField) record.getVariableField("700");
-
-                // System.out.println(record.toString());
-                if (currentField != null) {
-                    subfield = currentField.getSubfield('a');
-                    if (subfield != null) {
-                        secAuthor = subfield.getData();
-                    }
-                    subfield = currentField.getSubfield('0');
-                    if (subfield != null) {
-                        secAuthorGND = subfield.getData();
-                    }
-                }
+                secAuthor = getAuthorName(currentField);
+                secAuthorGND = getAuthorGND(currentField);
 
                 // get data field 245 title
                 currentField = (DataField) record.getVariableField("245");
                 // get the title proper
                 subfield = currentField.getSubfield('a');
-                title = subfield.getData();
-
                 // take out seperator, because it's not part of the title itself
-                title = title.replaceAll("\\u0098", "");
+                title = subfield.getData().replaceAll("\\u0098", "");
 
                 subfield = currentField.getSubfield('b');
                 if (subfield != null) {
@@ -159,13 +166,7 @@ public class MarcXMLCorpusProcessor {
                 corpus.addRecord(new IxTheoRecord(ppn, lang, author, authorGND, secAuthor, secAuthorGND, title,
                         subtitle, ixTheoAnnoSet));
                 for(IxTheoAnnotation anno : ixTheoAnnoSet){
-                    if(corpus.getIxTheoAnnoCount().containsKey(anno)){
-                        corpus.getIxTheoAnnoCount().put(anno, corpus.getIxTheoAnnoCount().get(anno)+1);
-                    }
-                    else{
-                        corpus.getIxTheoAnnoCount().put(anno, 1);
-                    }
-                    
+                    corpus.getIxTheoAnnoCounter(anno).increase();
                 }
             }
         }
