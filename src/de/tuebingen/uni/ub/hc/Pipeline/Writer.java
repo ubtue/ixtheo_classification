@@ -176,8 +176,6 @@ public class Writer {
         // 2. create Instances object
         data = new Instances("IxTheoRelation", atts, 0);
 
-        System.out.println(corpus.getNumRecordsInCorpus() + " * " + alphabetVector.size() + " * 64 Bit" + " = " + ((corpus.getNumRecordsInCorpus() / 1024.0) * (alphabetVector.size() / 1024.0) * 64 / 1024) + " GB");
-
         for (IxTheoRecord record : corpus) {
             vals = new double[data.numAttributes()]; // important: needs NEW
                                                      // array!
