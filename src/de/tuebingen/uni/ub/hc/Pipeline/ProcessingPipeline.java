@@ -37,17 +37,14 @@ public class ProcessingPipeline {
     public static void main(String[] args) {
 
         try {
-
+            System.out.println("Version 0.0.2");
             System.out.println("Reading corpus");
             final long startTime = System.currentTimeMillis();
-//             MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
-//             "data/TestCorpus.xml", 10000);
-            // MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml",
-            // "data/test2000CorpusGer.xml", 2000);
+            MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml", "data/TestCorpus.xml", 10000);
+            // MarcXMLCorpusProcessor.writeSubcorpusXML("data/GesamtTiteldaten-post-pipeline-160612.xml", "data/test2000CorpusGer.xml", 2000);
 
             // Block for new creation
-//            MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml",
-//                     "data/TestCorpus.xml", 10);
+            // MarcXMLCorpusProcessor.writeSubcorpusXML("data/gerCorpus.xml", "data/TestCorpus.xml", 10);
 
             System.out.println("Create ger corpus");
              IxTheoCorpus corpusGer = createNewCorpus("data/gerCorpus.xml");
@@ -69,14 +66,14 @@ public class ProcessingPipeline {
             // corpusGer.serialize("data/corpusGer.ser");
             // corpusGer = null;
 
-//            IxTheoCorpus corpusGer = createDesCorpus("data/corpusGerLingAnno.ser");
-//            corpusGer.fillTokenMatrices();
-//            System.out.println("filled Matrices");
-//            Writer.writeLemmaArff(corpusGer, "data/output/test.txt");
-//            Writer.printIxTheoCategoryFrequenciesTable(corpusGer, "data/output/IxTheoCategoryFrequencies.csv");
-//            Writer.writeLemmaArffWithWeka(corpusGer, "data/output/lemma.arff", IxTheoAnnotation.KDB);
-//            Writer.writeNeArffWithWeka(corpusGer, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
-//            System.out.println("wrote files");
+            IxTheoCorpus corpusGerLingAnno = createDesCorpus("data/corpusGerLingAnno.ser");
+            corpusGerLingAnno.fillTokenMatrices();
+            System.out.println("filled Matrices");
+            Writer.writeLemmaArff(corpusGerLingAnno, "data/output/test.txt");
+            Writer.printIxTheoCategoryFrequenciesTable(corpusGerLingAnno, "data/output/IxTheoCategoryFrequencies.csv");
+            Writer.writeLemmaArffWithWeka(corpusGerLingAnno, "data/output/lemma.arff", IxTheoAnnotation.KDB);
+            Writer.writeNeArffWithWeka(corpusGerLingAnno, "data/output/wekaNe.arff", IxTheoAnnotation.KDB);
+            System.out.println("wrote files");
              
             final long endTime = System.currentTimeMillis();
             System.out.println("Total execution time: " + (endTime - startTime) / 1000 / 60 + " min");

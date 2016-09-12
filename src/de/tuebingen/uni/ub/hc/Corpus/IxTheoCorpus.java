@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -241,7 +242,7 @@ public class IxTheoCorpus implements Serializable, Iterable<IxTheoRecord>
         return this.recordList.size();
     }
 
-    public ConcurrentLinkedQueue<IxTheoRecord> getConcurrentRecords() {
+    public Queue<IxTheoRecord> getConcurrentRecords() {
         return new ConcurrentLinkedQueue<>(recordList);
     }
 }

@@ -39,17 +39,24 @@ public class LinguisticProcessing {
 //        Properties props = new Properties();
 //        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
         final List<Future<?>> futures = new ArrayList<>();
-        final ConcurrentLinkedQueue<IxTheoRecord> records = corpus.getConcurrentRecords();
-        ExecutorService executor = Executors.newFixedThreadPool(8);
-        for (int i = 0; i < 8; i++) {
+        final Queue<IxTheoRecord> records = corpus.getConcurrentRecords();
+        final int numberOfThreads = 8;
+        final int avgNumberOfRecordsPerThread = records.size() / numberOfThreads;
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+        for (int i = 0; i < numberOfThreads; i++) {
              futures.add(executor.submit(() -> {
                 Properties germanProperties = StringUtils.argsToProperties(
                         "tokenize, ssplit, pos, lemma, ner", "StanfordCoreNLP-german.properties");
                 StanfordCoreNLP pipeline = new StanfordCoreNLP(germanProperties);
 
                 IxTheoRecord record;
+                 long counter = 0;
                 while ((record = records.poll()) != null) {
                     runStanfordCoreNLPPipeline(record, pipeline);
+                    if (++counter % 1000 == 0) {
+                        System.out.println(Thread.currentThread().toString() + ": " + counter + "/" + avgNumberOfRecordsPerThread);
+                        System.gc();
+                    }
                 }
             }));
         }
